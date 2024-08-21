@@ -15,11 +15,13 @@ export interface IInputParams {
     weight: number;
     height: number;
     age: number;
+    activity: ActivityFactor;
 }
 
 export interface TDEEResults {
     bmr: number | undefined;
     tdee: Map<ActivityFactor, number | undefined>;
+    activity: ActivityFactor;
 }
 
 export interface ITDEECalculatorProps {
@@ -33,6 +35,7 @@ export const TDEECalculator = ({ onChange }: ITDEECalculatorProps) => {
         weight: 97,
         height: 185,
         age: 39,
+        activity: ActivityFactor.Sedentary,
     });
 
     const handleGenderChange = (
@@ -43,6 +46,18 @@ export const TDEECalculator = ({ onChange }: ITDEECalculatorProps) => {
             return {
                 ...prevInput,
                 gender: event.target.value as Gender,
+            } as IInputParams;
+        });
+    };
+
+    const handleActivityChange = (
+        event: SelectChangeEvent<ActivityFactor>,
+        _child: React.ReactNode
+    ) => {
+        setInput((prevInput: IInputParams | undefined) => {
+            return {
+                ...prevInput,
+                activity: event.target.value as ActivityFactor,
             } as IInputParams;
         });
     };
@@ -61,7 +76,7 @@ export const TDEECalculator = ({ onChange }: ITDEECalculatorProps) => {
                 ? EmptyTDEEMap
                 : TotalDailyEnergyExpenditure.calculateAll(bmr);
 
-        onChange({ bmr, tdee });
+        onChange({ bmr, tdee, activity: input.activity });
     };
 
     useEffect(() => {
@@ -74,6 +89,7 @@ export const TDEECalculator = ({ onChange }: ITDEECalculatorProps) => {
                 display: "flex",
                 flexDirection: "column",
                 padding: `${bottomMargin}px`,
+                flexGrow: 0,
             }}
         >
             <FormControl>
@@ -146,7 +162,8 @@ export const TDEECalculator = ({ onChange }: ITDEECalculatorProps) => {
                 <EnumSelect
                     enumVariable={ActivityFactor}
                     label="Acivity Level"
-                    value={ActivityFactor.Sedentary}
+                    onChange={handleActivityChange}
+                    value={input.activity}
                 />
             </FormControl>
         </Box>

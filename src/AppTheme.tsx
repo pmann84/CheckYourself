@@ -28,6 +28,29 @@ export const AppDarkTheme = createTheme(AppBaseTheme, {
             primary: "#fbffff",
         },
     },
+    components: {
+        MuiInputLabel: {
+            styleOverrides: {
+                root: {
+                    color: "#8f8f8f",
+                },
+                focused: {
+                    color: "#fbffff",
+                },
+            },
+        },
+        MuiList: {
+            styleOverrides: {
+                root: {
+                    color: "#fbffff",
+                    backgroundColor: "#0f172a",
+                },
+                focused: {
+                    color: "#8f8f8f",
+                },
+            },
+        },
+    },
 });
 
 export const AppLightTheme = createTheme(AppBaseTheme, {

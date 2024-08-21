@@ -17,8 +17,12 @@ export const ResultsDisplay = ({ result }: IResultsDisplayProps) => {
                 display: "flex",
                 flexDirection: "column",
                 padding: `${bottomMargin}px`,
+                flexGrow: 1,
             }}
         >
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Typography variant="h5">Your Results</Typography>
+            </Box>
             <Typography>{`BMR: ${
                 result.bmr ? result.bmr.toFixed() : "-"
             }`}</Typography>
@@ -42,6 +46,7 @@ function App() {
     const [result, setResult] = useState<TDEEResults>({
         bmr: 0,
         tdee: new Map<ActivityFactor, number>(),
+        activity: ActivityFactor.Sedentary,
     });
 
     const onCalculate = (result: TDEEResults) => {
@@ -60,6 +65,7 @@ function App() {
                         flexGrow: 1,
                         display: "flex",
                         flexDirection: "row",
+                        maxWidth: "100vw",
                     }}
                 >
                     <TDEECalculator onChange={onCalculate} />

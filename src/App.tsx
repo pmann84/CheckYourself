@@ -10,17 +10,27 @@ export interface IResultsDisplayProps {
 }
 
 export const ResultsDisplay = ({ result }: IResultsDisplayProps) => {
+    const bottomMargin = 15;
     return (
-        <Box>
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                padding: `${bottomMargin}px`,
+            }}
+        >
             <Typography>{`BMR: ${
                 result.bmr ? result.bmr.toFixed() : "-"
             }`}</Typography>
             {[...result.tdee.keys()].map((af, i) => {
                 const tdee = result.tdee.get(af);
+                // TODO: Be aware that this depends on the fact that the order of the
+                // keys in the map is the same as the enum is defined. Should probably
+                // look for a way around this
                 return (
-                    <Typography key={i}>{`TDEE (${ActivityFactor[af]}): ${
-                        tdee ? tdee.toFixed() : "-"
-                    }`}</Typography>
+                    <Typography key={i}>{`TDEE (${
+                        Object.keys(ActivityFactor)[i]
+                    }): ${tdee ? tdee.toFixed() : "-"}`}</Typography>
                 );
             })}
         </Box>
@@ -35,7 +45,7 @@ function App() {
     });
 
     const onCalculate = (result: TDEEResults) => {
-        console.log(`Result recieved...`, result);
+        // console.log(`Result recieved...`, result);
         setResult(result);
     };
 
@@ -45,8 +55,16 @@ function App() {
                 <MainToolbar
                     onThemeModeChange={(mode: ThemeMode) => setTheme(mode)}
                 />
-                <TDEECalculator onChange={onCalculate} />
-                <ResultsDisplay result={result} />
+                <Box
+                    sx={{
+                        flexGrow: 1,
+                        display: "flex",
+                        flexDirection: "row",
+                    }}
+                >
+                    <TDEECalculator onChange={onCalculate} />
+                    <ResultsDisplay result={result} />
+                </Box>
             </Box>
         </AppThemeProvider>
     );

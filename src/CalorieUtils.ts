@@ -1,6 +1,6 @@
 export enum Gender {
-    Male = 1,
-    Female = 0,
+    Male = "0",
+    Female = "1",
 }
 
 interface BMRParameters {
@@ -92,11 +92,11 @@ export class BasalMetabolicRate {
 
 // TODO: Custom Activity Factor
 export enum ActivityFactor {
-    Sedentary = 1.2,
-    Light = 1.375,
-    Moderate = 1.55,
-    Very = 1.725,
-    Extra = 1.9,
+    Sedentary = "1.2",
+    Light = "1.375",
+    Moderate = "1.55",
+    Very = "1.725",
+    Extra = "1.9",
 }
 
 export const EmptyTDEEMap = new Map<ActivityFactor, number | undefined>([
@@ -118,7 +118,8 @@ export class TotalDailyEnergyExpenditure {
         } else {
             actualBmr = bmr;
         }
-        return actualBmr * activityFactor;
+        const af = parseFloat(activityFactor);
+        return actualBmr * af;
     }
 
     public static calculateAll(
@@ -131,11 +132,23 @@ export class TotalDailyEnergyExpenditure {
             actualBmr = bmr;
         }
         return new Map([
-            [ActivityFactor.Sedentary, actualBmr * ActivityFactor.Sedentary],
-            [ActivityFactor.Light, actualBmr * ActivityFactor.Light],
-            [ActivityFactor.Moderate, actualBmr * ActivityFactor.Moderate],
-            [ActivityFactor.Very, actualBmr * ActivityFactor.Very],
-            [ActivityFactor.Extra, actualBmr * ActivityFactor.Extra],
+            [
+                ActivityFactor.Sedentary,
+                actualBmr * parseFloat(ActivityFactor.Sedentary),
+            ],
+            [
+                ActivityFactor.Light,
+                actualBmr * parseFloat(ActivityFactor.Light),
+            ],
+            [
+                ActivityFactor.Moderate,
+                actualBmr * parseFloat(ActivityFactor.Moderate),
+            ],
+            [ActivityFactor.Very, actualBmr * parseFloat(ActivityFactor.Very)],
+            [
+                ActivityFactor.Extra,
+                actualBmr * parseFloat(ActivityFactor.Extra),
+            ],
         ]);
     }
 }

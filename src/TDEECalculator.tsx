@@ -1,11 +1,4 @@
-import {
-    Box,
-    FormControl,
-    MenuItem,
-    Select,
-    SelectChangeEvent,
-    TextField,
-} from "@mui/material";
+import { Box, FormControl, SelectChangeEvent, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
     ActivityFactor,
@@ -15,6 +8,7 @@ import {
     MifflinStJeorParameters,
     TotalDailyEnergyExpenditure,
 } from "./CalorieUtils";
+import { EnumSelect } from "./EnumSelect";
 
 export interface IInputParams {
     gender: Gender;
@@ -41,11 +35,14 @@ export const TDEECalculator = ({ onChange }: ITDEECalculatorProps) => {
         age: 39,
     });
 
-    const handleGenderChange = (event: SelectChangeEvent) => {
+    const handleGenderChange = (
+        event: SelectChangeEvent<Gender>,
+        _child: React.ReactNode
+    ) => {
         setInput((prevInput: IInputParams | undefined) => {
             return {
                 ...prevInput,
-                gender: parseInt(event.target.value) as Gender,
+                gender: event.target.value as Gender,
             } as IInputParams;
         });
     };
@@ -139,15 +136,18 @@ export const TDEECalculator = ({ onChange }: ITDEECalculatorProps) => {
                     }}
                     defaultValue={input.age.toString()}
                 />
-                <Select
+                <EnumSelect
+                    enumVariable={Gender}
                     label="Gender"
-                    value={input.gender.toString()}
+                    value={input.gender}
                     onChange={handleGenderChange}
                     sx={{ marginBottom: `${bottomMargin}px` }}
-                >
-                    <MenuItem value={Gender.Male}>Male</MenuItem>
-                    <MenuItem value={Gender.Female}>Female</MenuItem>
-                </Select>
+                />
+                <EnumSelect
+                    enumVariable={ActivityFactor}
+                    label="Acivity Level"
+                    value={ActivityFactor.Sedentary}
+                />
             </FormControl>
         </Box>
     );

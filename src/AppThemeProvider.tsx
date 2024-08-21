@@ -1,36 +1,7 @@
 import { ThemeProvider } from "@emotion/react";
-import { createTheme, CssBaseline, Theme } from "@mui/material";
+import { CssBaseline } from "@mui/material";
 import { PropsWithChildren } from "react";
-
-const darkTheme = createTheme({
-    palette: {
-        mode: "dark",
-        primary: {
-            main: "#fbffff",
-        },
-        background: {
-            default: "#0f172a",
-        },
-        text: {
-            primary: "#fbffff",
-        },
-    },
-});
-
-const lightTheme = createTheme({
-    palette: {
-        mode: "light",
-        primary: {
-            main: "#0f172a",
-        },
-        background: {
-            default: "#ffffff",
-        },
-        text: {
-            primary: "#0f172a",
-        },
-    },
-});
+import { AppDarkTheme, AppLightTheme } from "./AppTheme";
 
 export enum ThemeMode {
     Light,
@@ -48,13 +19,7 @@ export const AppThemeProvider = ({
 }: PropsWithChildren<IAppThemeProviderProps>) => {
     return (
         <ThemeProvider
-            theme={(theme: Theme) => {
-                if (mode === ThemeMode.Dark) {
-                    return createTheme({ ...theme, ...darkTheme });
-                } else {
-                    return createTheme({ ...theme, ...lightTheme });
-                }
-            }}
+            theme={mode === ThemeMode.Dark ? AppDarkTheme : AppLightTheme}
         >
             <CssBaseline />
             {children}

@@ -1,44 +1,99 @@
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import { useState } from "react";
+import {
+    Box,
+    Card,
+    CardContent,
+    CardHeader,
+    Paper,
+    SxProps,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Theme,
+    Typography,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import { AppThemeProvider, ThemeMode } from "./AppThemeProvider";
 import { CalorieDisplayCard } from "./CalorieDisplayCard";
-import { ActivityFactor, ActivityFactorShortName } from "./CalorieUtils";
+import {
+    ActivityFactor,
+    EmptyIdealWeightResult,
+    Gender,
+    IdealWeight,
+    IdealWeightFormula,
+    IdealWeightFormulaDescriptiveName,
+    IdealWeightFormulaName,
+    IdealWeightResult,
+} from "./CalorieUtils";
 import { MainToolbar } from "./MainToolbar";
-import { TDEECalculator, TDEEResults } from "./TDEECalculator";
+import { DefaultInputParams, TDEECalculator, TDEEResults } from "./TDEECalculator";
+import { TDEEResultsTable } from "./TDEEResultsTable";
 
-export interface ITDEEResultsTableProps {
-    tdeeMap: Map<ActivityFactor, number | undefined>;
-    selectedActivityFactor?: ActivityFactor;
+export interface IIdealWeightDisplayProps {
+    heightInCm: number;
+    gender: Gender;
+    sx?: SxProps<Theme>;
 }
 
-export const TDEEResultsTable = ({ tdeeMap, selectedActivityFactor }: ITDEEResultsTableProps) => {
+export const IdealWeightDisplay = ({ heightInCm, gender, sx }: IIdealWeightDisplayProps) => {
+    const [idealWeightRange, setIdealWeightRange] = useState<IdealWeightResult>(EmptyIdealWeightResult);
+    useEffect(() => {
+        console.log(`Height changed: ${heightInCm}`);
+        setIdealWeightRange(IdealWeight.CalculateRange(heightInCm, gender));
+    }, [heightInCm, gender]);
+
     return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Activity Level</TableCell>
-                        <TableCell align="right">Total Daily Energy Expenditure (cals)</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {[ActivityFactor.Sedentary, ActivityFactor.Light, ActivityFactor.Moderate, ActivityFactor.Heavy, ActivityFactor.VeryHeavy].map(
-                        (af) => (
-                            <TableRow
-                                key={ActivityFactorShortName(af)}
-                                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                                selected={af === selectedActivityFactor}
-                            >
-                                <TableCell component="th" scope="row">
-                                    {ActivityFactorShortName(af)}
-                                </TableCell>
-                                <TableCell align="right">{tdeeMap.get(af)?.toFixed(0) ?? "-"}</TableCell>
+        <Card sx={{ borderRadius: 2, ...sx }}>
+            <CardHeader title="Ideal Weight" sx={{ paddingBottom: "5px" }} />
+            <CardContent sx={{ paddingTop: "0px" }}>
+                <Box sx={{ padding: "10px" }}>
+                    {" "}
+                    <Typography
+                        sx={{
+                            fontSize: 30,
+                            paddingRight: "3px",
+                            lineHeight: 1,
+                        }}
+                    >
+                        {idealWeightRange.range[0] !== undefined && idealWeightRange.range[1] !== undefined
+                            ? `${idealWeightRange.range[0].toFixed(1)}-${idealWeightRange.range[1].toFixed(1)}kg`
+                            : "-"}
+                    </Typography>
+                </Box>
+                <TableContainer component={Paper}>
+                    <Table aria-label="simple table" size="small">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Formula</TableCell>
+                                <TableCell align="right">Ideal Weight (kg)</TableCell>
                             </TableRow>
-                        )
-                    )}
-                </TableBody>
-            </Table>
-        </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {Object.values(IdealWeightFormula)
+                                .filter((fm) => {
+                                    console.log(fm, typeof fm !== "string");
+                                    return typeof fm !== "string";
+                                })
+                                .map((fm: string | IdealWeightFormula) => (
+                                    <TableRow
+                                        key={IdealWeightFormulaName(fm as IdealWeightFormula)}
+                                        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {IdealWeightFormulaDescriptiveName(fm as IdealWeightFormula)}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            {idealWeightRange.rangeMap.get(fm as IdealWeightFormula)?.toFixed(1) ?? "-"}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </CardContent>
+        </Card>
     );
 };
 
@@ -46,7 +101,6 @@ export interface IResultsDisplayProps {
     result: TDEEResults;
 }
 
-// TODO: Ideal weight
 // TODO: BMI
 export const ResultsDisplay = ({ result }: IResultsDisplayProps) => {
     const bottomMargin = 10;
@@ -60,7 +114,7 @@ export const ResultsDisplay = ({ result }: IResultsDisplayProps) => {
             }}
         >
             <Box sx={{ display: "flex", justifyContent: "center", margin: `${bottomMargin}px` }}>
-                <Typography variant="h4">Results</Typography>
+                <Typography variant="h6">Results</Typography>
             </Box>
             <Box
                 sx={{
@@ -87,7 +141,10 @@ export const ResultsDisplay = ({ result }: IResultsDisplayProps) => {
                     />
                 </Box>
                 <Box>
-                    <TDEEResultsTable tdeeMap={result.tdee} selectedActivityFactor={result.activity} />
+                    <TDEEResultsTable sx={{ margin: `${bottomMargin}px` }} tdeeMap={result.tdee} selectedActivityFactor={result.activity} />
+                </Box>
+                <Box>
+                    <IdealWeightDisplay sx={{ margin: `${bottomMargin}px` }} heightInCm={result.input.height} gender={result.input.gender} />
                 </Box>
             </Box>
         </Box>
@@ -100,10 +157,10 @@ function App() {
         bmr: 0,
         tdee: new Map<ActivityFactor, number>(),
         activity: ActivityFactor.Sedentary,
+        input: DefaultInputParams,
     });
 
     const onCalculate = (result: TDEEResults) => {
-        // console.log(`Result recieved...`, result);
         setResult(result);
     };
 

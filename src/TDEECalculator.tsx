@@ -11,10 +11,19 @@ export interface IInputParams {
     activity: ActivityFactor;
 }
 
+export const DefaultInputParams: IInputParams = {
+    gender: Gender.Male,
+    weight: 97,
+    height: 185,
+    age: 39,
+    activity: ActivityFactor.Sedentary,
+};
+
 export interface TDEEResults {
     bmr: number | undefined;
     tdee: Map<ActivityFactor, number | undefined>;
     activity: ActivityFactor;
+    input: IInputParams;
 }
 
 export interface ITDEECalculatorProps {
@@ -55,7 +64,7 @@ export const TDEECalculator = ({ onChange }: ITDEECalculatorProps) => {
         const bmr = BasalMetabolicRate.Calculate(input.weight, input.height, input.age, params);
         const tdee = bmr === undefined ? EmptyTDEEMap : TotalDailyEnergyExpenditure.calculateAll(bmr);
 
-        onChange({ bmr, tdee, activity: input.activity });
+        onChange({ bmr, tdee, activity: input.activity, input });
     };
 
     useEffect(() => {

@@ -1,3 +1,5 @@
+import { Convert } from "./Conversion";
+
 export enum Gender {
     Male,
     Female,
@@ -174,5 +176,190 @@ export class TotalDailyEnergyExpenditure {
             [ActivityFactor.Heavy, actualBmr * ActivityFactor.Heavy],
             [ActivityFactor.VeryHeavy, actualBmr * ActivityFactor.VeryHeavy],
         ]);
+    }
+}
+
+interface IdealWeightParameters {
+    initialConstantKg: number;
+    kgPerInchOverFiveFeet: number;
+}
+
+export class GJHamwiParameters {
+    public static get(gender: Gender): IdealWeightParameters {
+        switch (gender) {
+            case Gender.Male: {
+                return {
+                    initialConstantKg: 48.0,
+                    kgPerInchOverFiveFeet: 2.7,
+                };
+            }
+            // Female
+            default: {
+                return {
+                    initialConstantKg: 45.5,
+                    kgPerInchOverFiveFeet: 2.2,
+                };
+            }
+        }
+    }
+}
+
+export class BJDevineParameters {
+    public static get(gender: Gender): IdealWeightParameters {
+        switch (gender) {
+            case Gender.Male: {
+                return {
+                    initialConstantKg: 50.0,
+                    kgPerInchOverFiveFeet: 2.3,
+                };
+            }
+            // Female
+            default: {
+                return {
+                    initialConstantKg: 45.5,
+                    kgPerInchOverFiveFeet: 2.3,
+                };
+            }
+        }
+    }
+}
+
+export class JDRobinsonParameters {
+    public static get(gender: Gender): IdealWeightParameters {
+        switch (gender) {
+            case Gender.Male: {
+                return {
+                    initialConstantKg: 52.0,
+                    kgPerInchOverFiveFeet: 1.9,
+                };
+            }
+            // Female
+            default: {
+                return {
+                    initialConstantKg: 49.0,
+                    kgPerInchOverFiveFeet: 1.7,
+                };
+            }
+        }
+    }
+}
+
+export class DRMillerParameters {
+    public static get(gender: Gender): IdealWeightParameters {
+        switch (gender) {
+            case Gender.Male: {
+                return {
+                    initialConstantKg: 56.2,
+                    kgPerInchOverFiveFeet: 1.41,
+                };
+            }
+            // Female
+            default: {
+                return {
+                    initialConstantKg: 53.1,
+                    kgPerInchOverFiveFeet: 1.36,
+                };
+            }
+        }
+    }
+}
+
+export enum IdealWeightFormula {
+    Hamwi,
+    Devine,
+    Robinson,
+    Miller,
+}
+
+export const IdealWeightFormulaYear = (formula: IdealWeightFormula): number => {
+    switch (formula) {
+        case IdealWeightFormula.Hamwi:
+            return 1964;
+        case IdealWeightFormula.Devine:
+            return 1974;
+        case IdealWeightFormula.Robinson:
+            return 1983;
+        case IdealWeightFormula.Miller:
+            return 1983;
+        default:
+            return 0;
+    }
+};
+
+export const IdealWeightFormulaName = (formula: IdealWeightFormula): string => {
+    switch (formula) {
+        case IdealWeightFormula.Hamwi:
+            return "G. J. Hamwi";
+        case IdealWeightFormula.Devine:
+            return "B. J. Devine";
+        case IdealWeightFormula.Robinson:
+            return "J. D. Robinson";
+        case IdealWeightFormula.Miller:
+            return "D. R. Miller";
+        default:
+            return "";
+    }
+};
+
+export const IdealWeightFormulaDescriptiveName = (formula: IdealWeightFormula): string => {
+    return `${IdealWeightFormulaName(formula)} (${IdealWeightFormulaYear(formula)})`;
+};
+
+export const GetIdealWeightParameters = (formula: IdealWeightFormula, gender: Gender): IdealWeightParameters | undefined => {
+    switch (formula) {
+        case IdealWeightFormula.Hamwi:
+            return GJHamwiParameters.get(gender);
+        case IdealWeightFormula.Devine:
+            return BJDevineParameters.get(gender);
+        case IdealWeightFormula.Robinson:
+            return JDRobinsonParameters.get(gender);
+        case IdealWeightFormula.Miller:
+            return DRMillerParameters.get(gender);
+        default:
+            return undefined;
+    }
+};
+
+export interface IdealWeightResult {
+    rangeMap: Map<IdealWeightFormula, number | undefined>;
+    range: [number | undefined, number | undefined];
+}
+
+export const EmptyIdealWeightResult: IdealWeightResult = {
+    rangeMap: new Map<IdealWeightFormula, number | undefined>([
+        [IdealWeightFormula.Hamwi, undefined],
+        [IdealWeightFormula.Devine, undefined],
+        [IdealWeightFormula.Robinson, undefined],
+        [IdealWeightFormula.Miller, undefined],
+    ]),
+    range: [undefined, undefined],
+};
+
+export class IdealWeight {
+    private static isIndividualInputValid = (value: number): boolean => {
+        return !(value === 0 || isNaN(value));
+    };
+
+    public static Calculate(heightCm: number, params: IdealWeightParameters): number | undefined {
+        if (!this.isIndividualInputValid(heightCm)) return undefined;
+        const inchesOverFiveFeet = Convert.CmToInches(heightCm) - Convert.FeetToInches(5);
+        return params.initialConstantKg + inchesOverFiveFeet * params.kgPerInchOverFiveFeet;
+    }
+
+    public static CalculateRange(heightCm: number, gender: Gender): IdealWeightResult {
+        const rangeMap = new Map<IdealWeightFormula, number | undefined>([
+            [IdealWeightFormula.Hamwi, IdealWeight.Calculate(heightCm, GJHamwiParameters.get(gender))],
+            [IdealWeightFormula.Devine, IdealWeight.Calculate(heightCm, BJDevineParameters.get(gender))],
+            [IdealWeightFormula.Robinson, IdealWeight.Calculate(heightCm, JDRobinsonParameters.get(gender))],
+            [IdealWeightFormula.Miller, IdealWeight.Calculate(heightCm, DRMillerParameters.get(gender))],
+        ]);
+
+        let range: [number | undefined, number | undefined] = [undefined, undefined];
+        const canCalculateRange = rangeMap.values().next().value !== undefined;
+        if (canCalculateRange) {
+            const rangeValues: number[] = [...rangeMap.values()].filter((w) => w !== undefined);
+            range = [Math.min(...rangeValues.values()), Math.max(...rangeValues!.values())];
+        }
+        return { rangeMap, range };
     }
 }

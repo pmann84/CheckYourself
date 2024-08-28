@@ -1,7 +1,6 @@
 import { Theme } from "@emotion/react";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { Box, Card, CardContent, Popover, SxProps, Typography } from "@mui/material";
-import { useState } from "react";
+import { Box, Card, CardContent, styled, SxProps, Tooltip, Typography } from "@mui/material";
 import { ActivityFactor, ActivityFactorDescription, ActivityFactorLongName } from "./CalorieUtils";
 
 export interface ICalorieDisplayCardProps {
@@ -11,21 +10,17 @@ export interface ICalorieDisplayCardProps {
     sx?: SxProps<Theme>;
 }
 
+const AdjustedCardContent = styled(CardContent)(`
+    padding: 10px;
+    &:last-child {
+        padding-bottom: 10px;
+    }
+`);
+
 export const CalorieDisplayCard = ({ description, calories, activity, sx }: ICalorieDisplayCardProps) => {
-    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
-    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handlePopoverClose = () => {
-        setAnchorEl(null);
-    };
-
-    const open = Boolean(anchorEl);
     return (
         <Card sx={{ borderRadius: 2, ...sx }}>
-            <CardContent>
+            <AdjustedCardContent>
                 <Box
                     sx={{
                         justifyContent: "center",
@@ -62,35 +57,15 @@ export const CalorieDisplayCard = ({ description, calories, activity, sx }: ICal
                         >
                             <Typography sx={{ marginRight: "3px" }}>Activity Level:</Typography>
                             <Typography fontWeight="fontWeightMedium">{ActivityFactorLongName(activity)}</Typography>
-                            <Typography onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}>
-                                <HelpOutlineIcon fontSize="small" />
-                            </Typography>
-                            <Popover
-                                id="mouse-over-popover"
-                                sx={{
-                                    pointerEvents: "none",
-                                }}
-                                open={open}
-                                anchorEl={anchorEl}
-                                anchorOrigin={{
-                                    vertical: "bottom",
-                                    horizontal: "left",
-                                }}
-                                transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "left",
-                                }}
-                                onClose={handlePopoverClose}
-                                disableRestoreFocus
-                            >
-                                <Box sx={{ padding: `20px` }}>
-                                    <Typography>{ActivityFactorDescription(activity)}</Typography>
-                                </Box>
-                            </Popover>
+                            <Tooltip title={ActivityFactorDescription(activity)}>
+                                <Typography>
+                                    <HelpOutlineIcon fontSize="small" />
+                                </Typography>
+                            </Tooltip>
                         </Box>
                     )}
                 </Box>
-            </CardContent>
+            </AdjustedCardContent>
         </Card>
     );
 };

@@ -19,34 +19,51 @@ export const AppDarkTheme = createTheme(AppBaseTheme, {
     palette: {
         mode: "dark",
         primary: {
-            main: "#fbffff",
+            main: "rgb(251, 255, 255)",
         },
         background: {
-            default: "#0f172a",
+            default: "rgb(15, 23, 42)",
         },
         text: {
-            primary: "#fbffff",
+            primary: "rgb(251, 255, 255)",
         },
     },
     components: {
         MuiInputLabel: {
             styleOverrides: {
                 root: {
-                    color: "#8f8f8f",
-                },
-                focused: {
-                    color: "#fbffff",
+                    color: "rgb(143, 143, 143)",
+                    "&.Mui-focused": {
+                        color: "rgb(251, 255, 255)",
+                    },
                 },
             },
         },
         MuiList: {
             styleOverrides: {
                 root: {
-                    color: "#fbffff",
-                    backgroundColor: "#0f172a",
+                    color: "rgb(251, 255, 255)",
+                    backgroundColor: "rgb(15, 23, 42)",
+                    "&.Mui-focused": {
+                        color: "rgb(143, 143, 143)",
+                    },
                 },
-                focused: {
-                    color: "#8f8f8f",
+            },
+        },
+        MuiCard: {
+            styleOverrides: {
+                root: {
+                    color: "rgb(251, 255, 255)",
+                    backgroundColor: "rgb(15, 23, 42)",
+                    boxShadow: "0px 2px 1px -1px rgba(251,255,255,0.2),0px 1px 1px 0px rgba(251,255,255,0.14),0px 1px 3px 0px rgba(251,255,255,0.12)",
+                },
+            },
+        },
+        MuiTable: {
+            styleOverrides: {
+                root: {
+                    color: "rgb(251, 255, 255)",
+                    backgroundColor: "rgb(15, 23, 42)",
                 },
             },
         },
@@ -57,13 +74,22 @@ export const AppLightTheme = createTheme(AppBaseTheme, {
     palette: {
         mode: "light",
         primary: {
-            main: "#0f172a",
+            main: "rgb(15, 23, 42)",
         },
         background: {
-            default: "#ffffff",
+            default: "rgb(255, 255, 255)",
         },
         text: {
-            primary: "#0f172a",
+            primary: "rgb(15, 23, 42)",
+        },
+    },
+    components: {
+        MuiCard: {
+            styleOverrides: {
+                root: {
+                    boxShadow: "0px 2px 1px -1px rgba(15,23,42,0.2),0px 1px 1px 0px rgba(15,23,42,0.14),0px 1px 3px 0px rgba(15,23,42,0.12)",
+                },
+            },
         },
     },
 });

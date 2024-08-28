@@ -1,6 +1,6 @@
 export enum Gender {
-    Male = "0",
-    Female = "1",
+    Male,
+    Female,
 }
 
 interface BMRParameters {
@@ -67,17 +67,8 @@ export class BasalMetabolicRate {
         return !(value === 0 || isNaN(value));
     };
 
-    public static Calculate(
-        bodyWeightKg: number,
-        heightCm: number,
-        ageYrs: number,
-        parameters: BMRParameters
-    ): number | undefined {
-        if (
-            this.isIndividualInputValid(bodyWeightKg) &&
-            this.isIndividualInputValid(heightCm) &&
-            this.isIndividualInputValid(ageYrs)
-        ) {
+    public static Calculate(bodyWeightKg: number, heightCm: number, ageYrs: number, parameters: BMRParameters): number | undefined {
+        if (this.isIndividualInputValid(bodyWeightKg) && this.isIndividualInputValid(heightCm) && this.isIndividualInputValid(ageYrs)) {
             return (
                 parameters.Constant +
                 parameters.WeightMultiplier * bodyWeightKg +
@@ -92,39 +83,84 @@ export class BasalMetabolicRate {
 
 // TODO: Custom Activity Factor
 export enum ActivityFactor {
-    Sedentary = "1.2",
-    Light = "1.375",
-    Moderate = "1.55",
-    Very = "1.725",
-    Extra = "1.9",
+    Sedentary = 1.2,
+    Light = 1.375,
+    Moderate = 1.55,
+    Heavy = 1.725,
+    VeryHeavy = 1.9,
 }
+
+export const ActivityFactorShortName = (activity: ActivityFactor): string => {
+    switch (activity) {
+        case ActivityFactor.Sedentary:
+            return "Sedentary";
+        case ActivityFactor.Light:
+            return "Light";
+        case ActivityFactor.Moderate:
+            return "Moderate";
+        case ActivityFactor.Heavy:
+            return "Heavy";
+        case ActivityFactor.VeryHeavy:
+            return "Very Heavy";
+        default:
+            return "";
+    }
+};
+
+export const ActivityFactorLongName = (activity: ActivityFactor): string => {
+    switch (activity) {
+        case ActivityFactor.Sedentary:
+            return "Sedentary";
+        case ActivityFactor.Light:
+            return "Light Exercise";
+        case ActivityFactor.Moderate:
+            return "Moderate Exercise";
+        case ActivityFactor.Heavy:
+            return "Heavy Exercise";
+        case ActivityFactor.VeryHeavy:
+            return "Very Heavy Exercise";
+        default:
+            return "";
+    }
+};
+
+export const ActivityFactorDescription = (activity: ActivityFactor): string => {
+    switch (activity) {
+        case ActivityFactor.Sedentary:
+            return "Little to no physical activity";
+        case ActivityFactor.Light:
+            return "1-3 hours of exercise per week";
+        case ActivityFactor.Moderate:
+            return "4-6 hours of exercise per week";
+        case ActivityFactor.Heavy:
+            return "7-9 hours of exercise per week";
+        case ActivityFactor.VeryHeavy:
+            return "10+ hours of exercise per week";
+        default:
+            return "";
+    }
+};
 
 export const EmptyTDEEMap = new Map<ActivityFactor, number | undefined>([
     [ActivityFactor.Sedentary, undefined],
     [ActivityFactor.Light, undefined],
     [ActivityFactor.Moderate, undefined],
-    [ActivityFactor.Very, undefined],
-    [ActivityFactor.Extra, undefined],
+    [ActivityFactor.Heavy, undefined],
+    [ActivityFactor.VeryHeavy, undefined],
 ]);
 
 export class TotalDailyEnergyExpenditure {
-    public static Calculate(
-        bmr: (() => number) | number,
-        activityFactor: ActivityFactor
-    ): number {
+    public static Calculate(bmr: (() => number) | number, activityFactor: ActivityFactor): number {
         let actualBmr: number;
         if (typeof bmr === "function") {
             actualBmr = bmr();
         } else {
             actualBmr = bmr;
         }
-        const af = parseFloat(activityFactor);
-        return actualBmr * af;
+        return actualBmr * activityFactor;
     }
 
-    public static calculateAll(
-        bmr: (() => number) | number
-    ): Map<ActivityFactor, number | undefined> {
+    public static calculateAll(bmr: (() => number) | number): Map<ActivityFactor, number | undefined> {
         let actualBmr: number;
         if (typeof bmr === "function") {
             actualBmr = bmr();
@@ -132,23 +168,11 @@ export class TotalDailyEnergyExpenditure {
             actualBmr = bmr;
         }
         return new Map([
-            [
-                ActivityFactor.Sedentary,
-                actualBmr * parseFloat(ActivityFactor.Sedentary),
-            ],
-            [
-                ActivityFactor.Light,
-                actualBmr * parseFloat(ActivityFactor.Light),
-            ],
-            [
-                ActivityFactor.Moderate,
-                actualBmr * parseFloat(ActivityFactor.Moderate),
-            ],
-            [ActivityFactor.Very, actualBmr * parseFloat(ActivityFactor.Very)],
-            [
-                ActivityFactor.Extra,
-                actualBmr * parseFloat(ActivityFactor.Extra),
-            ],
+            [ActivityFactor.Sedentary, actualBmr * ActivityFactor.Sedentary],
+            [ActivityFactor.Light, actualBmr * ActivityFactor.Light],
+            [ActivityFactor.Moderate, actualBmr * ActivityFactor.Moderate],
+            [ActivityFactor.Heavy, actualBmr * ActivityFactor.Heavy],
+            [ActivityFactor.VeryHeavy, actualBmr * ActivityFactor.VeryHeavy],
         ]);
     }
 }

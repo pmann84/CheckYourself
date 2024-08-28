@@ -1,13 +1,6 @@
 import { Box, FormControl, SelectChangeEvent, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import {
-    ActivityFactor,
-    BasalMetabolicRate,
-    EmptyTDEEMap,
-    Gender,
-    MifflinStJeorParameters,
-    TotalDailyEnergyExpenditure,
-} from "./CalorieUtils";
+import { ActivityFactor, BasalMetabolicRate, EmptyTDEEMap, Gender, MifflinStJeorParameters, TotalDailyEnergyExpenditure } from "./CalorieUtils";
 import { EnumSelect } from "./EnumSelect";
 
 export interface IInputParams {
@@ -38,10 +31,7 @@ export const TDEECalculator = ({ onChange }: ITDEECalculatorProps) => {
         activity: ActivityFactor.Sedentary,
     });
 
-    const handleGenderChange = (
-        event: SelectChangeEvent<Gender>,
-        _child: React.ReactNode
-    ) => {
+    const handleGenderChange = (event: SelectChangeEvent<Gender>, _child: React.ReactNode) => {
         setInput((prevInput: IInputParams | undefined) => {
             return {
                 ...prevInput,
@@ -50,10 +40,7 @@ export const TDEECalculator = ({ onChange }: ITDEECalculatorProps) => {
         });
     };
 
-    const handleActivityChange = (
-        event: SelectChangeEvent<ActivityFactor>,
-        _child: React.ReactNode
-    ) => {
+    const handleActivityChange = (event: SelectChangeEvent<ActivityFactor>, _child: React.ReactNode) => {
         setInput((prevInput: IInputParams | undefined) => {
             return {
                 ...prevInput,
@@ -65,16 +52,8 @@ export const TDEECalculator = ({ onChange }: ITDEECalculatorProps) => {
     const calculateResults = () => {
         console.log(`Returning sensible results with input`, input);
         const params = MifflinStJeorParameters.get(input.gender);
-        const bmr = BasalMetabolicRate.Calculate(
-            input.weight,
-            input.height,
-            input.age,
-            params
-        );
-        const tdee =
-            bmr === undefined
-                ? EmptyTDEEMap
-                : TotalDailyEnergyExpenditure.calculateAll(bmr);
+        const bmr = BasalMetabolicRate.Calculate(input.weight, input.height, input.age, params);
+        const tdee = bmr === undefined ? EmptyTDEEMap : TotalDailyEnergyExpenditure.calculateAll(bmr);
 
         onChange({ bmr, tdee, activity: input.activity });
     };
@@ -164,6 +143,7 @@ export const TDEECalculator = ({ onChange }: ITDEECalculatorProps) => {
                     label="Acivity Level"
                     onChange={handleActivityChange}
                     value={input.activity}
+                    // mapper={ActivityFactorShortName}
                 />
             </FormControl>
         </Box>

@@ -1,12 +1,20 @@
-import { Box, Typography } from "@mui/material";
+import { Box, styled } from "@mui/material";
 import { useState } from "react";
 import { AppThemeProvider, ThemeMode } from "./AppThemeProvider";
+import { BMIDisplay } from "./BmiDisplay";
 import { CalorieDisplayCard } from "./CalorieDisplayCard";
 import { ActivityFactor } from "./CalorieUtils";
 import { IdealWeightDisplay } from "./IdealWeightDisplay";
 import { MainToolbar } from "./MainToolbar";
 import { DefaultInputParams, TDEECalculator, TDEEResults } from "./TDEECalculator";
 import { TDEEResultsTable } from "./TDEEResultsTable";
+
+const DisplayBox = styled(Box)(`
+    display: "flex";
+    flex-direction: "column";
+    padding: "10px";
+    flex-grow: 1;
+`);
 
 export interface IResultsDisplayProps {
     result: TDEEResults;
@@ -16,17 +24,10 @@ export interface IResultsDisplayProps {
 export const ResultsDisplay = ({ result }: IResultsDisplayProps) => {
     const bottomMargin = 10;
     return (
-        <Box
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                padding: `${bottomMargin}px`,
-                flexGrow: 1,
-            }}
-        >
-            <Box sx={{ display: "flex", justifyContent: "center", margin: `${bottomMargin}px` }}>
+        <DisplayBox>
+            {/* <Box sx={{ display: "flex", justifyContent: "center", margin: `${bottomMargin}px` }}>
                 <Typography variant="h6">Results</Typography>
-            </Box>
+            </Box> */}
             <Box
                 sx={{
                     display: "flex",
@@ -57,8 +58,11 @@ export const ResultsDisplay = ({ result }: IResultsDisplayProps) => {
                 <Box>
                     <IdealWeightDisplay sx={{ margin: `${bottomMargin}px` }} heightInCm={result.input.height} gender={result.input.gender} />
                 </Box>
+                <Box>
+                    <BMIDisplay sx={{ margin: `${bottomMargin}px` }} heightCm={result.input.height} weightKg={result.input.weight} />
+                </Box>
             </Box>
-        </Box>
+        </DisplayBox>
     );
 };
 

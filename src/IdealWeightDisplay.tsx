@@ -43,7 +43,6 @@ export const IdealWeightDisplay = ({ heightInCm, gender, sx }: IIdealWeightDispl
             <CardHeader title="Ideal Weight" sx={{ paddingBottom: "5px" }} />
             <CardContent sx={{ paddingTop: "0px" }}>
                 <Box sx={{ padding: "10px" }}>
-                    {" "}
                     <Typography
                         sx={{
                             fontSize: 30,

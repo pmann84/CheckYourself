@@ -1,4 +1,5 @@
 import { Convert } from "./Conversion";
+import { Range } from "./Range";
 
 export enum Gender {
     Male,
@@ -361,5 +362,57 @@ export class IdealWeight {
             range = [Math.min(...rangeValues.values()), Math.max(...rangeValues!.values())];
         }
         return { rangeMap, range };
+    }
+}
+
+export enum BMIClassification {
+    Underweight,
+    Normal,
+    Overweight,
+    Obese,
+}
+
+const UnderweightThresholdKg = 18.5;
+const NormalThresholdKg = 25.0;
+const OverweightThresholdKg = 30.0;
+
+export const BMIRange = (bmi: BMIClassification): Range<number> => {
+    switch (bmi) {
+        case BMIClassification.Underweight:
+            return { min: NaN, max: UnderweightThresholdKg };
+        case BMIClassification.Normal:
+            return { min: UnderweightThresholdKg, max: NormalThresholdKg };
+        case BMIClassification.Overweight:
+            return { min: NormalThresholdKg, max: OverweightThresholdKg };
+        case BMIClassification.Obese:
+            return { min: OverweightThresholdKg, max: NaN };
+    }
+};
+
+export const BMIClassificationName = (bmi: BMIClassification): string => {
+    switch (bmi) {
+        case BMIClassification.Underweight:
+            return "Underweight";
+        case BMIClassification.Normal:
+            return "Normal";
+        case BMIClassification.Overweight:
+            return "Overweight";
+        case BMIClassification.Obese:
+            return "Obese";
+    }
+};
+
+export class BodyMassIndex {
+    public static Calculate(weightKg: number, heightCm: number): number {
+        const heightM = Convert.CmToMetres(heightCm);
+        return weightKg / (heightM * heightM);
+    }
+
+    public static CalculateClassification(weightKg: number, heightCm: number): BMIClassification {
+        const bmi = BodyMassIndex.Calculate(weightKg, heightCm);
+        if (bmi < UnderweightThresholdKg) return BMIClassification.Underweight;
+        if (bmi < NormalThresholdKg) return BMIClassification.Normal;
+        if (bmi < OverweightThresholdKg) return BMIClassification.Overweight;
+        return BMIClassification.Obese;
     }
 }

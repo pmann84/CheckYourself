@@ -21,4 +21,8 @@ export class Convert {
     public static FeetToInches(ft: number): number {
         return ft * Convert.Constants.InchesPerFoot;
     }
+
+    public static CmToMetres(cms: number): number {
+        return cms / 100.0;
+    }
 }

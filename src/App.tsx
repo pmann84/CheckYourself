@@ -6,6 +6,7 @@ import { CalorieDisplayCard } from "./CalorieDisplayCard";
 import { ActivityFactor } from "./CalorieUtils";
 import { IdealWeightDisplay } from "./IdealWeightDisplay";
 import { MainToolbar } from "./MainToolbar";
+import { useLocalStorage } from "./Storage";
 import { DefaultInputParams, TDEECalculator, TDEEResults } from "./TDEECalculator";
 import { TDEEResultsTable } from "./TDEEResultsTable";
 
@@ -20,7 +21,8 @@ export interface IResultsDisplayProps {
     result: TDEEResults;
 }
 
-// TODO: BMI
+// TODO: Ideal weight graphs
+// TODO: BMI graphs
 export const ResultsDisplay = ({ result }: IResultsDisplayProps) => {
     const bottomMargin = 10;
     return (
@@ -66,17 +68,21 @@ export const ResultsDisplay = ({ result }: IResultsDisplayProps) => {
     );
 };
 
+const InputParamsStorageKey = "check.yourself.last.input";
+
 function App() {
     const [theme, setTheme] = useState(ThemeMode.Light);
+    const storage = useLocalStorage();
     const [result, setResult] = useState<TDEEResults>({
         bmr: 0,
         tdee: new Map<ActivityFactor, number>(),
         activity: ActivityFactor.Sedentary,
-        input: DefaultInputParams,
+        input: storage.load(InputParamsStorageKey, DefaultInputParams),
     });
 
     const onCalculate = (result: TDEEResults) => {
         setResult(result);
+        storage.save(InputParamsStorageKey, result.input);
     };
 
     return (
@@ -91,7 +97,7 @@ function App() {
                         maxWidth: "100vw",
                     }}
                 >
-                    <TDEECalculator onChange={onCalculate} />
+                    <TDEECalculator onChange={onCalculate} initialInput={result.input} />
                     <ResultsDisplay result={result} />
                 </Box>
             </Box>

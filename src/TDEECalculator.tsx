@@ -27,18 +27,13 @@ export interface TDEEResults {
 }
 
 export interface ITDEECalculatorProps {
+    initialInput: IInputParams;
     onChange: (result: TDEEResults) => void;
 }
 
-export const TDEECalculator = ({ onChange }: ITDEECalculatorProps) => {
+export const TDEECalculator = ({ initialInput, onChange }: ITDEECalculatorProps) => {
     const bottomMargin = 15;
-    const [input, setInput] = useState<IInputParams>({
-        gender: Gender.Male,
-        weight: 97,
-        height: 185,
-        age: 39,
-        activity: ActivityFactor.Sedentary,
-    });
+    const [input, setInput] = useState<IInputParams>(initialInput);
 
     const handleGenderChange = (event: SelectChangeEvent<Gender>, _child: React.ReactNode) => {
         setInput((prevInput: IInputParams | undefined) => {

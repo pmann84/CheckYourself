@@ -34,11 +34,20 @@ export const EnumSelect = <T extends string | number, TEnumValue extends string 
     const muiTheme = useTheme();
     const isSmallScreen = useMediaQuery(muiTheme.breakpoints.down("sm"));
 
-    // const variant = isSmallScreen ? "standard" : "undefined";
+    const variant = isSmallScreen ? "standard" : undefined;
     return (
-        <FormControl fullWidth={!isSmallScreen}>
-            <InputLabel id={`${props.label}`}>{props.label}</InputLabel>
-            <Select labelId={`${props.label}`} {...props}>
+        <FormControl fullWidth={!isSmallScreen} variant={variant} sx={{ marginTop: "0px", marginBottom: `${isSmallScreen ? 0 : 15}px`, ...props.sx }}>
+            {!isSmallScreen && <InputLabel id={`${props.label}`}>{props.label}</InputLabel>}
+            <Select
+                labelId={`${props.label}`}
+                {...props}
+                sx={{
+                    "& .MuiSelect-select": {
+                        paddingTop: isSmallScreen ? "1px" : 2,
+                    },
+                    ...props.sx,
+                }}
+            >
                 {getEnumKeyValuePairs(enumVariable).map(([key, value]: [string, string | number], index: number) => {
                     return (
                         <MenuItem key={index} value={value}>

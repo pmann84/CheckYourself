@@ -126,7 +126,7 @@ export const TDEEInput = ({ initialInput, onChange }: ITDEEInputProps) => {
                         label="Gender"
                         value={input.gender}
                         onChange={handleGenderChange}
-                        sx={{ marginBottom: `${bottomMargin}px` }}
+                        // sx={{ marginBottom: `${bottomMargin}px` }}
                     />
                 </Box>
                 <Box order={{ xs: 1, sm: 5 }}>

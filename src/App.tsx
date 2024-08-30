@@ -1,4 +1,4 @@
-import { Box, styled } from "@mui/material";
+import { Box, styled, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { AppThemeProvider, ThemeMode } from "./AppThemeProvider";
 import { BMIDisplay } from "./BmiDisplay";
@@ -7,7 +7,8 @@ import { ActivityFactor } from "./CalorieUtils";
 import { IdealWeightDisplay } from "./IdealWeightDisplay";
 import { MainToolbar } from "./MainToolbar";
 import { useLocalStorage } from "./Storage";
-import { DefaultInputParams, TDEECalculator, TDEEResults } from "./TDEECalculator";
+import { TDEECalculator, TDEEResults } from "./TDEECalculator";
+import { DefaultInputParams } from "./TDEEInput";
 import { TDEEResultsTable } from "./TDEEResultsTable";
 
 const DisplayBox = styled(Box)(`
@@ -80,6 +81,9 @@ function App() {
         input: storage.load(InputParamsStorageKey, DefaultInputParams),
     });
 
+    const muiTheme = useTheme();
+    const isSmallScreen = useMediaQuery(muiTheme.breakpoints.down("sm"));
+    console.log(`SM: ${isSmallScreen}`);
     const onCalculate = (result: TDEEResults) => {
         setResult(result);
         storage.save(InputParamsStorageKey, result.input);
@@ -93,7 +97,7 @@ function App() {
                     sx={{
                         flexGrow: 1,
                         display: "flex",
-                        flexDirection: "row",
+                        flexDirection: `${isSmallScreen ? " column" : "row"}`,
                         maxWidth: "100vw",
                     }}
                 >

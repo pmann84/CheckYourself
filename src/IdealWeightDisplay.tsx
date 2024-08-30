@@ -34,7 +34,6 @@ export interface IIdealWeightDisplayProps {
 export const IdealWeightDisplay = ({ heightInCm, gender, sx }: IIdealWeightDisplayProps) => {
     const [idealWeightRange, setIdealWeightRange] = useState<IdealWeightResult>(EmptyIdealWeightResult);
     useEffect(() => {
-        console.log(`Height changed: ${heightInCm}`);
         setIdealWeightRange(IdealWeight.CalculateRange(heightInCm, gender));
     }, [heightInCm, gender]);
 
@@ -66,7 +65,6 @@ export const IdealWeightDisplay = ({ heightInCm, gender, sx }: IIdealWeightDispl
                         <TableBody>
                             {Object.values(IdealWeightFormula)
                                 .filter((fm) => {
-                                    console.log(fm, typeof fm !== "string");
                                     return typeof fm !== "string";
                                 })
                                 .map((fm: string | IdealWeightFormula) => (

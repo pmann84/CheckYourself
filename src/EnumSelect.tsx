@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select, SelectProps } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, SelectProps, useMediaQuery, useTheme } from "@mui/material";
 
 function getEnumKeyValuePairs<EnumT extends string, EnumValueT extends string | number>(enumVariable: { [key in EnumT]: EnumValueT }): [
     string,
@@ -31,8 +31,12 @@ export const EnumSelect = <T extends string | number, TEnumValue extends string 
     mapper,
     ...props
 }: EnumSelectProps<T, TEnumValue>) => {
+    const muiTheme = useTheme();
+    const isSmallScreen = useMediaQuery(muiTheme.breakpoints.down("sm"));
+
+    // const variant = isSmallScreen ? "standard" : "undefined";
     return (
-        <FormControl>
+        <FormControl fullWidth={!isSmallScreen}>
             <InputLabel id={`${props.label}`}>{props.label}</InputLabel>
             <Select labelId={`${props.label}`} {...props}>
                 {getEnumKeyValuePairs(enumVariable).map(([key, value]: [string, string | number], index: number) => {

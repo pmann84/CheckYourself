@@ -52,7 +52,6 @@ export const BMIDisplay = ({ weightKg, heightCm, sx }: IBMIDisplayProps) => {
                         <TableBody>
                             {Object.values(BMIClassification)
                                 .filter((fm) => {
-                                    console.log(fm, typeof fm !== "string");
                                     return typeof fm !== "string";
                                 })
                                 .map((bmiEntry: string | BMIClassification) => (

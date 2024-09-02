@@ -9,14 +9,13 @@ export interface IRangeChartProps {
 
 export const RangeChart = ({ categories, value, colours }: IRangeChartProps) => {
     const chartHeight = 35;
-    console.log(value, categories);
     const draw = (ctx: CanvasRenderingContext2D, _frameCount: number) => {
         if (categories.length === 0) return;
 
         const x = 0;
         const barHeight = 10;
         const y = (chartHeight - barHeight) / 2;
-        const width = 308;
+        const width = ctx.canvas.width;
         // Draw the outline
         // ctx.strokeStyle = "#000000";
         // ctx.beginPath();

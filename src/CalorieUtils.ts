@@ -378,7 +378,6 @@ const OverweightThresholdKg = 30.0;
 
 export const BMIRange = (bmi: BMIClassification, extremaPercentage?: number): Range<number> => {
     const range = OverweightThresholdKg - UnderweightThresholdKg;
-    console.log(range, 1 + extremaPercentage!, range * extremaPercentage!);
     switch (bmi) {
         case BMIClassification.Underweight:
             return { min: extremaPercentage ? UnderweightThresholdKg - range * extremaPercentage : NaN, max: UnderweightThresholdKg };

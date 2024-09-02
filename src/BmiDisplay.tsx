@@ -13,6 +13,7 @@ import {
     TableRow,
     Theme,
     Typography,
+    useTheme,
 } from "@mui/material";
 import { BMIClassification, BMIClassificationName, BMIRange, BodyMassIndex } from "./CalorieUtils";
 import { rangeToString } from "./Range";
@@ -25,6 +26,7 @@ export interface IBMIDisplayProps {
 }
 
 export const BMIDisplay = ({ weightKg, heightCm, sx }: IBMIDisplayProps) => {
+    const theme = useTheme();
     const bmi = BodyMassIndex.Calculate(weightKg, heightCm);
     const bmiClassification = BodyMassIndex.CalculateClassification(weightKg, heightCm);
     return (
@@ -52,6 +54,7 @@ export const BMIDisplay = ({ weightKg, heightCm, sx }: IBMIDisplayProps) => {
                         })}
                     colours={["#bef7be", "#73f073", "#ff7373", "#ff2e2e"]}
                     value={bmi}
+                    valueSelectorColour={theme.palette.primary.main}
                 />
                 <TableContainer component={Paper}>
                     <Table aria-label="bmi table" size="small">

@@ -13,6 +13,7 @@ import {
     TableHead,
     TableRow,
     Typography,
+    useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
@@ -35,6 +36,7 @@ export interface IIdealWeightDisplayProps {
 }
 
 export const IdealWeightDisplay = ({ heightInCm, gender, sx, weightInKg }: IIdealWeightDisplayProps) => {
+    const theme = useTheme();
     const [idealWeightRange, setIdealWeightRange] = useState<IdealWeightResult>(EmptyIdealWeightResult);
     useEffect(() => {
         setIdealWeightRange(IdealWeight.CalculateRange(heightInCm, gender));
@@ -65,6 +67,7 @@ export const IdealWeightDisplay = ({ heightInCm, gender, sx, weightInKg }: IIdea
                     ]}
                     colours={["#bef7be", "#73f073", "#ff7373"]}
                     value={weightInKg}
+                    valueSelectorColour={theme.palette.primary.main}
                 />
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table" size="small">

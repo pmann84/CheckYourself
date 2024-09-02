@@ -5,9 +5,10 @@ export interface IRangeChartProps {
     categories: Range<number>[];
     colours: string[];
     value?: number;
+    valueSelectorColour?: string;
 }
 
-export const RangeChart = ({ categories, value, colours }: IRangeChartProps) => {
+export const RangeChart = ({ categories, value, colours, valueSelectorColour }: IRangeChartProps) => {
     const chartHeight = 35;
     const draw = (ctx: CanvasRenderingContext2D, _frameCount: number) => {
         if (categories.length === 0) return;
@@ -42,7 +43,7 @@ export const RangeChart = ({ categories, value, colours }: IRangeChartProps) => 
         });
 
         if (value) {
-            ctx.fillStyle = "#000000";
+            ctx.fillStyle = valueSelectorColour ?? "#000000";
             const x = (value - categories[0].min) * widthPerValue;
             const arrowHeight = 10;
             const top = y + arrowHeight;

@@ -1,8 +1,21 @@
-import { Box, FormControl, SelectChangeEvent, useMediaQuery, useTheme } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box, FormControl, SelectChangeEvent, SxProps, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { ActivityFactor, Gender } from "./CalorieUtils";
-import { EnumSelect } from "./EnumSelect";
+import { ResponsiveEnumSelect } from "./EnumSelect";
 import { ResponsiveTextField } from "./ReponsiveTextField";
+
+// TODO: Type this properly but assume we'll use it correctly for now
+export interface IOrderedTypography {
+    order?: any;
+    sx?: SxProps<Theme>;
+}
+const OrderedTypography = ({ children, order, sx }: PropsWithChildren<IOrderedTypography>) => {
+    return (
+        <Box order={{ ...order }}>
+            <Typography sx={{ ...sx }}>{children}</Typography>
+        </Box>
+    );
+};
 
 export interface IInputParams {
     gender: Gender;
@@ -62,9 +75,40 @@ export const TDEEInput = ({ initialInput, onChange }: ITDEEInputProps) => {
                     flexDirection: `${isSmallScreen ? "row" : "column"}`,
                     padding: `${bottomMargin}px`,
                     flexGrow: 0,
+                    flexWrap: isSmallScreen ? "wrap" : "nowrap",
                 }}
             >
-                <Box order={{ xs: 5, sm: 1 }}>
+                {isSmallScreen && (
+                    <OrderedTypography sx={{ paddingRight: "4px" }} order={{ xs: 1 }}>
+                        Stats for a
+                    </OrderedTypography>
+                )}
+                {isSmallScreen && (
+                    <OrderedTypography sx={{ paddingRight: "4px" }} order={{ xs: 3 }}>
+                        of
+                    </OrderedTypography>
+                )}
+                {isSmallScreen && (
+                    <OrderedTypography sx={{ paddingRight: "4px", paddingLeft: "4px" }} order={{ xs: 5 }}>
+                        of age, weighing
+                    </OrderedTypography>
+                )}
+                {isSmallScreen && (
+                    <OrderedTypography sx={{ paddingRight: "4px", paddingLeft: "4px" }} order={{ xs: 7 }}>
+                        and measuring
+                    </OrderedTypography>
+                )}
+                {isSmallScreen && (
+                    <OrderedTypography sx={{ paddingRight: "4px", paddingLeft: "4px" }} order={{ xs: 9 }}>
+                        with a
+                    </OrderedTypography>
+                )}
+                {isSmallScreen && (
+                    <OrderedTypography sx={{ paddingRight: "4px", paddingLeft: "4px" }} order={{ xs: 11 }}>
+                        lifestyle.
+                    </OrderedTypography>
+                )}
+                <Box order={{ xs: 6, sm: 1 }}>
                     <ResponsiveTextField
                         label="Body Weight (kg)"
                         smallScreenSuffix="kg"
@@ -83,7 +127,7 @@ export const TDEEInput = ({ initialInput, onChange }: ITDEEInputProps) => {
                         step="0.1"
                     />
                 </Box>
-                <Box order={{ xs: 4, sm: 2 }}>
+                <Box order={{ xs: 8, sm: 2 }}>
                     <ResponsiveTextField
                         label="Height (cm)"
                         smallScreenSuffix="cm"
@@ -102,7 +146,7 @@ export const TDEEInput = ({ initialInput, onChange }: ITDEEInputProps) => {
                         step="0.1"
                     />
                 </Box>
-                <Box order={{ xs: 3, sm: 3 }}>
+                <Box order={{ xs: 4, sm: 3 }}>
                     <ResponsiveTextField
                         label="Age (yrs)"
                         smallScreenSuffix="yrs"
@@ -121,7 +165,7 @@ export const TDEEInput = ({ initialInput, onChange }: ITDEEInputProps) => {
                     />
                 </Box>
                 <Box order={{ xs: 2, sm: 4 }}>
-                    <EnumSelect
+                    <ResponsiveEnumSelect
                         enumVariable={Gender}
                         label="Gender"
                         value={input.gender}
@@ -129,8 +173,8 @@ export const TDEEInput = ({ initialInput, onChange }: ITDEEInputProps) => {
                         // sx={{ marginBottom: `${bottomMargin}px` }}
                     />
                 </Box>
-                <Box order={{ xs: 1, sm: 5 }}>
-                    <EnumSelect
+                <Box order={{ xs: 10, sm: 5 }}>
+                    <ResponsiveEnumSelect
                         enumVariable={ActivityFactor}
                         label="Acivity Level"
                         onChange={handleActivityChange}

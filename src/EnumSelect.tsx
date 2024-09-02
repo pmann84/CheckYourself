@@ -21,16 +21,16 @@ function getEnumKeyValuePairs<EnumT extends string, EnumValueT extends string | 
     }
 }
 
-export type EnumSelectProps<EnumT extends string | number, EnumValueT extends string | number> = SelectProps<EnumValueT> & {
+export type IResponsiveEnumSelectProps<EnumT extends string | number, EnumValueT extends string | number> = SelectProps<EnumValueT> & {
     enumVariable: { [key in EnumT]: EnumValueT };
     mapper?: (key: { [key in EnumT]: EnumValueT }) => string;
 };
 
-export const EnumSelect = <T extends string | number, TEnumValue extends string | number>({
+export const ResponsiveEnumSelect = <T extends string | number, TEnumValue extends string | number>({
     enumVariable,
     mapper,
     ...props
-}: EnumSelectProps<T, TEnumValue>) => {
+}: IResponsiveEnumSelectProps<T, TEnumValue>) => {
     const muiTheme = useTheme();
     const isSmallScreen = useMediaQuery(muiTheme.breakpoints.down("sm"));
 

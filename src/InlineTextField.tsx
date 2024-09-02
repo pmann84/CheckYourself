@@ -28,7 +28,7 @@ export const InlineTextField = ({ step, suffix, onChange, defaultValue }: IInlin
                 size="small"
                 onChange={onChange}
             />
-            {suffix && <Typography>{suffix}</Typography>}
+            {suffix && <Typography sx={{ paddingLeft: "4px" }}>{suffix}</Typography>}
         </Box>
     );
 };

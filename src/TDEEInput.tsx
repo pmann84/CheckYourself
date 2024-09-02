@@ -1,8 +1,9 @@
-import { Box, FormControl, SelectChangeEvent, SxProps, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, FormControl, SelectChangeEvent, SxProps, Theme, Typography } from "@mui/material";
 import { PropsWithChildren, useEffect, useState } from "react";
 import { ActivityFactor, Gender } from "./CalorieUtils";
 import { ResponsiveEnumSelect } from "./EnumSelect";
 import { ResponsiveTextField } from "./ReponsiveTextField";
+import { useSmallScreenMediaQuery } from "./useSmallScreenMediaQuery";
 
 // TODO: Type this properly but assume we'll use it correctly for now
 export interface IOrderedTypography {
@@ -39,8 +40,7 @@ export interface ITDEEInputProps {
 }
 
 export const TDEEInput = ({ initialInput, onChange }: ITDEEInputProps) => {
-    const muiTheme = useTheme();
-    const isSmallScreen = useMediaQuery(muiTheme.breakpoints.down("sm"));
+    const isSmallScreen = useSmallScreenMediaQuery();
 
     const [input, setInput] = useState<IInputParams>(initialInput ?? DefaultInputParams);
 

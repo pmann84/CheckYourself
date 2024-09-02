@@ -1,4 +1,4 @@
-import { Box, styled, useMediaQuery, useTheme } from "@mui/material";
+import { Box, styled } from "@mui/material";
 import { useState } from "react";
 import { AppThemeProvider, ThemeMode } from "./AppThemeProvider";
 import { BMIDisplay } from "./BmiDisplay";
@@ -10,6 +10,7 @@ import { useLocalStorage } from "./Storage";
 import { TDEECalculator, TDEEResults } from "./TDEECalculator";
 import { DefaultInputParams } from "./TDEEInput";
 import { TDEEResultsTable } from "./TDEEResultsTable";
+import { useSmallScreenMediaQuery } from "./useSmallScreenMediaQuery";
 
 const DisplayBox = styled(Box)(`
     display: "flex";
@@ -47,12 +48,14 @@ export const ResultsDisplay = ({ result }: IResultsDisplayProps) => {
                         sx={{ margin: `${bottomMargin}px`, flexGrow: 1 }}
                         calories={result.bmr}
                         description="Basal Metabolic Rate (BMR)"
+                        shortDescription="BMR"
                     />
                     <CalorieDisplayCard
                         sx={{ margin: `${bottomMargin}px`, flexGrow: 1 }}
                         calories={result.tdee.get(result.activity)}
                         activity={result.activity}
                         description="Total Daily Energy Expenditure (TDEE)"
+                        shortDescription="TDEE"
                     />
                 </Box>
                 <Box>
@@ -81,9 +84,7 @@ function App() {
         input: storage.load(InputParamsStorageKey, DefaultInputParams),
     });
 
-    const muiTheme = useTheme();
-    const isSmallScreen = useMediaQuery(muiTheme.breakpoints.down("sm"));
-    console.log(`SM: ${isSmallScreen}`);
+    const isSmallScreen = useSmallScreenMediaQuery();
     const onCalculate = (result: TDEEResults) => {
         setResult(result);
         storage.save(InputParamsStorageKey, result.input);

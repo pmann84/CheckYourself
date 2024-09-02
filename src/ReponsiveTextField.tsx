@@ -1,6 +1,7 @@
 import { Theme } from "@emotion/react";
-import { SxProps, TextField, useMediaQuery, useTheme } from "@mui/material";
+import { SxProps, TextField } from "@mui/material";
 import { InlineTextField } from "./InlineTextField";
+import { useSmallScreenMediaQuery } from "./useSmallScreenMediaQuery";
 
 export interface IResponsiveTextFieldProps {
     label: string;
@@ -12,8 +13,7 @@ export interface IResponsiveTextFieldProps {
 }
 
 export const ResponsiveTextField = ({ label, step, smallScreenSuffix, onChange, defaultValue, sx }: IResponsiveTextFieldProps) => {
-    const muiTheme = useTheme();
-    const isSmallScreen = useMediaQuery(muiTheme.breakpoints.down("sm"));
+    const isSmallScreen = useSmallScreenMediaQuery();
 
     const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (onChange) {

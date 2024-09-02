@@ -12,10 +12,9 @@ import {
     TableRow,
     Theme,
     Tooltip,
-    useMediaQuery,
-    useTheme,
 } from "@mui/material";
 import { ActivityFactor, ActivityFactorDescription, ActivityFactorShortName } from "./CalorieUtils";
+import { useSmallScreenMediaQuery } from "./useSmallScreenMediaQuery";
 
 export interface ITDEEResultsTableProps {
     tdeeMap: Map<ActivityFactor, number | undefined>;
@@ -24,8 +23,7 @@ export interface ITDEEResultsTableProps {
 }
 
 export const TDEEResultsTable = ({ tdeeMap, selectedActivityFactor, sx }: ITDEEResultsTableProps) => {
-    const muiTheme = useTheme();
-    const matches = useMediaQuery(muiTheme.breakpoints.down("sm"));
+    const isSmallScreen = useSmallScreenMediaQuery();
 
     return (
         <Card sx={{ borderRadius: 2, ...sx }}>
@@ -36,7 +34,7 @@ export const TDEEResultsTable = ({ tdeeMap, selectedActivityFactor, sx }: ITDEER
                         <TableHead>
                             <TableRow key="headers">
                                 <TableCell>Activity Level</TableCell>
-                                <TableCell align="right">{matches ? "TDEE (cals)" : "Total Daily Energy Expenditure (cals)"}</TableCell>
+                                <TableCell align="right">{isSmallScreen ? "TDEE (cals)" : "Total Daily Energy Expenditure (cals)"}</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>

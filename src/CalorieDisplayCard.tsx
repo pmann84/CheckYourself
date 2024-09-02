@@ -2,9 +2,11 @@ import { Theme } from "@emotion/react";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { Box, Card, CardContent, styled, SxProps, Tooltip, Typography } from "@mui/material";
 import { ActivityFactor, ActivityFactorDescription, ActivityFactorLongName } from "./CalorieUtils";
+import { useSmallScreenMediaQuery } from "./useSmallScreenMediaQuery";
 
 export interface ICalorieDisplayCardProps {
     description: string;
+    shortDescription: string;
     calories?: number;
     activity?: ActivityFactor;
     sx?: SxProps<Theme>;
@@ -17,7 +19,9 @@ const AdjustedCardContent = styled(CardContent)(`
     }
 `);
 
-export const CalorieDisplayCard = ({ description, calories, activity, sx }: ICalorieDisplayCardProps) => {
+export const CalorieDisplayCard = ({ description, shortDescription, calories, activity, sx }: ICalorieDisplayCardProps) => {
+    const isSmallScreen = useSmallScreenMediaQuery();
+
     return (
         <Card sx={{ borderRadius: 2, ...sx }}>
             <AdjustedCardContent>
@@ -31,7 +35,7 @@ export const CalorieDisplayCard = ({ description, calories, activity, sx }: ICal
                 >
                     <Typography
                         sx={{
-                            fontSize: 50,
+                            fontSize: isSmallScreen ? 25 : 50,
                             paddingRight: "3px",
                             lineHeight: 1,
                         }}
@@ -45,8 +49,24 @@ export const CalorieDisplayCard = ({ description, calories, activity, sx }: ICal
                         alignItems: "center",
                     }}
                 >
-                    <Typography fontWeight="fontWeightMedium">{description}</Typography>
-                    {activity && (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                        }}
+                    >
+                        <Typography fontWeight="fontWeightMedium">
+                            {isSmallScreen ? `${shortDescription} ${activity ? `: ${ActivityFactorLongName(activity)}` : ""}` : description}
+                        </Typography>
+                        {isSmallScreen && (
+                            <Tooltip title={`${description} ${activity ? `: ${ActivityFactorDescription(activity)}` : ""}`}>
+                                <Typography>
+                                    <HelpOutlineIcon fontSize="small" />
+                                </Typography>
+                            </Tooltip>
+                        )}
+                    </Box>
+                    {!isSmallScreen && activity && (
                         <Box
                             sx={{
                                 justifyContent: "center",

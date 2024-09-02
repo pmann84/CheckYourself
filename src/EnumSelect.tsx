@@ -1,4 +1,5 @@
-import { FormControl, InputLabel, MenuItem, Select, SelectProps, useMediaQuery, useTheme } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, SelectProps } from "@mui/material";
+import { useSmallScreenMediaQuery } from "./useSmallScreenMediaQuery";
 
 function getEnumKeyValuePairs<EnumT extends string, EnumValueT extends string | number>(enumVariable: { [key in EnumT]: EnumValueT }): [
     string,
@@ -31,8 +32,7 @@ export const ResponsiveEnumSelect = <T extends string | number, TEnumValue exten
     mapper,
     ...props
 }: IResponsiveEnumSelectProps<T, TEnumValue>) => {
-    const muiTheme = useTheme();
-    const isSmallScreen = useMediaQuery(muiTheme.breakpoints.down("sm"));
+    const isSmallScreen = useSmallScreenMediaQuery();
 
     const variant = isSmallScreen ? "standard" : undefined;
     return (

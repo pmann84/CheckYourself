@@ -8,12 +8,31 @@ export interface IRangeChartProps {
     valueSelectorColour?: string;
 }
 
+const drawTriangle = (
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    baseWidth: number,
+    height: number,
+    direction: "up" | "down",
+    colour: string
+) => {
+    ctx.fillStyle = colour;
+    const multiplier = direction === "up" ? 1 : -1;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + baseWidth * 0.5, y + multiplier * height);
+    ctx.lineTo(x - baseWidth * 0.5, y + multiplier * height);
+    ctx.fill();
+};
+
 export const RangeChart = ({ categories, value, colours, valueSelectorColour }: IRangeChartProps) => {
     const chartHeight = 35;
     const draw = (ctx: CanvasRenderingContext2D, _frameCount: number) => {
         if (categories.length === 0) return;
 
-        if (value && value > categories[categories.length - 1].max) categories[categories.length - 1].max = value * 1.025;
+        if (value && value > categories[categories.length - 1].max) categories[categories.length - 1].max = value * (1.0 + 0.25);
+        if (value && value < categories[0].min) categories[0].min = value * (1.0 - 0.25);
         const x = 0;
         const barHeight = 10;
         const y = (chartHeight - barHeight) / 2;
@@ -50,16 +69,10 @@ export const RangeChart = ({ categories, value, colours, valueSelectorColour }: 
         });
 
         if (value) {
-            ctx.fillStyle = valueSelectorColour ?? "#000000";
-            const x = (value - categories[0].min) * widthPerValue;
-            const arrowHeight = 10;
-            const top = y + arrowHeight;
-            const arrowBaseWidth = 10;
-            ctx.beginPath();
-            ctx.moveTo(x - arrowBaseWidth * 0.5, top - 20);
-            ctx.lineTo(x + arrowBaseWidth * 0.5, top - 20);
-            ctx.lineTo(x, top - 10);
-            ctx.fill();
+            const arrowHeight = 7;
+            const aX = (value - categories[0].min) * widthPerValue;
+            const aY = y;
+            drawTriangle(ctx, aX, aY, arrowHeight, arrowHeight, "down", valueSelectorColour ?? "#000000");
         }
     };
 

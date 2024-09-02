@@ -50,7 +50,7 @@ export const BMIDisplay = ({ weightKg, heightCm, sx }: IBMIDisplayProps) => {
                             return typeof fm !== "string";
                         })
                         .map((bmiEntry: string | BMIClassification) => {
-                            return BMIRange(bmiEntry as BMIClassification, 0.1);
+                            return BMIRange(bmiEntry as BMIClassification, 0.25);
                         })}
                     colours={["#bef7be", "#73f073", "#ff7373", "#ff2e2e"]}
                     value={bmi}

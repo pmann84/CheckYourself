@@ -78,10 +78,11 @@ export const ResultsDisplay = ({ result }: IResultsDisplayProps) => {
 };
 
 const InputParamsStorageKey = "check.yourself.last.input";
+const AppThemeModeKey = "check.yourself.theme.mode";
 
 function App() {
-    const [theme, setTheme] = useState(ThemeMode.Light);
     const storage = useLocalStorage();
+    const [theme, setTheme] = useState(storage.load(AppThemeModeKey, ThemeMode.Light));
     const [result, setResult] = useState<TDEEResults>({
         bmr: 0,
         tdee: new Map<ActivityFactor, number>(),
@@ -95,10 +96,15 @@ function App() {
         storage.save(InputParamsStorageKey, result.input);
     };
 
+    const onThemeModeChange = (mode: ThemeMode) => {
+        setTheme(mode);
+        storage.save(AppThemeModeKey, mode);
+    };
+
     return (
         <AppThemeProvider mode={theme}>
             <Box sx={{ flexGrow: 1 }}>
-                <MainToolbar onThemeModeChange={(mode: ThemeMode) => setTheme(mode)} />
+                <MainToolbar onThemeModeChange={onThemeModeChange} initialThemeMode={theme} />
                 <Box
                     sx={{
                         flexGrow: 1,

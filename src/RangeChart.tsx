@@ -30,7 +30,13 @@ export const RangeChart = ({ categories, value, colours }: IRangeChartProps) => 
             ctx.fillStyle = colours[index];
             ctx.beginPath();
             const cWidth = rangeLength(category) * widthPerValue;
-            ctx.rect(cX, y, cWidth, barHeight);
+            if (index === 0) {
+                ctx.roundRect(cX, y, cWidth, barHeight, [5, 0, 0, 5]);
+            } else if (index === categories.length - 1) {
+                ctx.roundRect(cX, y, cWidth, barHeight, [0, 5, 5, 0]);
+            } else {
+                ctx.rect(cX, y, cWidth, barHeight);
+            }
             ctx.fill();
             cX += cWidth;
         });

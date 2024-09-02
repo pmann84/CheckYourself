@@ -15,7 +15,8 @@ export const RangeChart = ({ categories, value, colours }: IRangeChartProps) => 
         const x = 0;
         const barHeight = 10;
         const y = (chartHeight - barHeight) / 2;
-        const width = ctx.canvas.width;
+        const { devicePixelRatio: ratio = 1 } = window;
+        const width = ctx.canvas.width / ratio;
         // Draw the outline
         // ctx.strokeStyle = "#000000";
         // ctx.beginPath();

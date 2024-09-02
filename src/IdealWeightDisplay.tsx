@@ -24,14 +24,17 @@ import {
     IdealWeightFormulaName,
     IdealWeightResult,
 } from "./CalorieUtils";
+import { rangeLength, toRange } from "./Range";
+import { RangeChart } from "./RangeChart";
 
 export interface IIdealWeightDisplayProps {
     heightInCm: number;
     gender: Gender;
     sx?: SxProps<Theme>;
+    weightInKg?: number;
 }
 
-export const IdealWeightDisplay = ({ heightInCm, gender, sx }: IIdealWeightDisplayProps) => {
+export const IdealWeightDisplay = ({ heightInCm, gender, sx, weightInKg }: IIdealWeightDisplayProps) => {
     const [idealWeightRange, setIdealWeightRange] = useState<IdealWeightResult>(EmptyIdealWeightResult);
     useEffect(() => {
         setIdealWeightRange(IdealWeight.CalculateRange(heightInCm, gender));
@@ -54,6 +57,15 @@ export const IdealWeightDisplay = ({ heightInCm, gender, sx }: IIdealWeightDispl
                             : "-"}
                     </Typography>
                 </Box>
+                <RangeChart
+                    categories={[
+                        toRange(idealWeightRange.range[0]! - 0.9 * rangeLength(toRange(...idealWeightRange.range)), idealWeightRange.range[0]),
+                        toRange(idealWeightRange.range[0], idealWeightRange.range[1]),
+                        toRange(idealWeightRange.range[1], idealWeightRange.range[1]! + 0.9 * rangeLength(toRange(...idealWeightRange.range))),
+                    ]}
+                    colours={["#bef7be", "#73f073", "#ff7373"]}
+                    value={weightInKg}
+                />
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table" size="small">
                         <TableHead>

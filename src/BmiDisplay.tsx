@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { BMIClassification, BMIClassificationName, BMIRange, BodyMassIndex } from "./CalorieUtils";
 import { rangeToString } from "./Range";
+import { RangeChart } from "./RangeChart";
 
 export interface IBMIDisplayProps {
     weightKg: number;
@@ -41,6 +42,17 @@ export const BMIDisplay = ({ weightKg, heightCm, sx }: IBMIDisplayProps) => {
                         {bmi.toFixed(1)}
                     </Typography>
                 </Box>
+                <RangeChart
+                    categories={Object.values(BMIClassification)
+                        .filter((fm) => {
+                            return typeof fm !== "string";
+                        })
+                        .map((bmiEntry: string | BMIClassification) => {
+                            return BMIRange(bmiEntry as BMIClassification, 0.1);
+                        })}
+                    colours={["#bef7be", "#73f073", "#ff7373", "#ff2e2e"]}
+                    value={bmi}
+                />
                 <TableContainer component={Paper}>
                     <Table aria-label="bmi table" size="small">
                         <TableHead>

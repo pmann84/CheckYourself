@@ -376,16 +376,18 @@ const UnderweightThresholdKg = 18.5;
 const NormalThresholdKg = 25.0;
 const OverweightThresholdKg = 30.0;
 
-export const BMIRange = (bmi: BMIClassification): Range<number> => {
+export const BMIRange = (bmi: BMIClassification, extremaPercentage?: number): Range<number> => {
+    const range = OverweightThresholdKg - UnderweightThresholdKg;
+    console.log(range, 1 + extremaPercentage!, range * extremaPercentage!);
     switch (bmi) {
         case BMIClassification.Underweight:
-            return { min: NaN, max: UnderweightThresholdKg };
+            return { min: extremaPercentage ? UnderweightThresholdKg - range * extremaPercentage : NaN, max: UnderweightThresholdKg };
         case BMIClassification.Normal:
             return { min: UnderweightThresholdKg, max: NormalThresholdKg };
         case BMIClassification.Overweight:
             return { min: NormalThresholdKg, max: OverweightThresholdKg };
         case BMIClassification.Obese:
-            return { min: OverweightThresholdKg, max: NaN };
+            return { min: OverweightThresholdKg, max: extremaPercentage ? OverweightThresholdKg + range * extremaPercentage : NaN };
     }
 };
 

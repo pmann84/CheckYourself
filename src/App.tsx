@@ -62,7 +62,12 @@ export const ResultsDisplay = ({ result }: IResultsDisplayProps) => {
                     <TDEEResultsTable sx={{ margin: `${bottomMargin}px` }} tdeeMap={result.tdee} selectedActivityFactor={result.activity} />
                 </Box>
                 <Box>
-                    <IdealWeightDisplay sx={{ margin: `${bottomMargin}px` }} heightInCm={result.input.height} gender={result.input.gender} />
+                    <IdealWeightDisplay
+                        sx={{ margin: `${bottomMargin}px` }}
+                        heightInCm={result.input.height}
+                        gender={result.input.gender}
+                        weightInKg={result.input.weight}
+                    />
                 </Box>
                 <Box>
                     <BMIDisplay sx={{ margin: `${bottomMargin}px` }} heightCm={result.input.height} weightKg={result.input.weight} />

@@ -13,6 +13,7 @@ export const RangeChart = ({ categories, value, colours, valueSelectorColour }: 
     const draw = (ctx: CanvasRenderingContext2D, _frameCount: number) => {
         if (categories.length === 0) return;
 
+        if (value && value > categories[categories.length - 1].max) categories[categories.length - 1].max = value * 1.025;
         const x = 0;
         const barHeight = 10;
         const y = (chartHeight - barHeight) / 2;
@@ -39,6 +40,12 @@ export const RangeChart = ({ categories, value, colours, valueSelectorColour }: 
                 ctx.rect(cX, y, cWidth, barHeight);
             }
             ctx.fill();
+            if (index !== 0) {
+                ctx.fillStyle = valueSelectorColour ?? "#000000";
+                const text = category.min.toFixed(1);
+                const textWidth = ctx.measureText(text).width;
+                ctx.fillText(category.min.toFixed(1), cX - textWidth * 0.5, y + barHeight * 2);
+            }
             cX += cWidth;
         });
 

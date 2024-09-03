@@ -24,6 +24,7 @@ export interface IInputParams {
     height: number;
     age: number;
     activity: ActivityFactor;
+    bodyFatPct: number | null;
 }
 
 export const DefaultInputParams: IInputParams = {
@@ -32,6 +33,7 @@ export const DefaultInputParams: IInputParams = {
     height: 175,
     age: 25,
     activity: ActivityFactor.Sedentary,
+    bodyFatPct: null,
 };
 
 export interface ITDEEInputProps {
@@ -180,6 +182,24 @@ export const TDEEInput = ({ initialInput, onChange }: ITDEEInputProps) => {
                         onChange={handleActivityChange}
                         value={input.activity}
                         // mapper={ActivityFactorShortName}
+                    />
+                </Box>
+                <Box order={{ xs: 12, sm: 6 }}>
+                    <ResponsiveTextField
+                        label="Body Fat %"
+                        smallScreenSuffix="%"
+                        sx={{
+                            marginBottom: `${bottomMargin}px`,
+                        }}
+                        defaultValue={input.bodyFatPct ? input.bodyFatPct.toString() : ""}
+                        onChange={(bodyFatPct) => {
+                            setInput((prevInput: IInputParams | undefined) => {
+                                return {
+                                    ...prevInput,
+                                    bodyFatPct: bodyFatPct,
+                                } as IInputParams;
+                            });
+                        }}
                     />
                 </Box>
             </FormControl>

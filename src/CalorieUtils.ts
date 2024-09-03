@@ -11,9 +11,9 @@ interface BMRParameters {
     WeightMultiplier: number;
     HeightMultiplier: number;
     AgeMultiplier: number;
+    LeanBodyMassMultiplier: number;
 }
 
-// TODO: Katch-McArdle (uses a body fat %)
 export class HarrisBenedictParameters {
     public static get(gender: Gender): BMRParameters {
         switch (gender) {
@@ -23,6 +23,7 @@ export class HarrisBenedictParameters {
                     WeightMultiplier: 13.75,
                     HeightMultiplier: 5.003,
                     AgeMultiplier: 6.75,
+                    LeanBodyMassMultiplier: 0,
                 };
             }
             // Female
@@ -32,6 +33,7 @@ export class HarrisBenedictParameters {
                     WeightMultiplier: 13.75,
                     HeightMultiplier: 5.003,
                     AgeMultiplier: 6.75,
+                    LeanBodyMassMultiplier: 0,
                 };
             }
         }
@@ -40,6 +42,7 @@ export class HarrisBenedictParameters {
 
 export class MifflinStJeorParameters {
     public static get(gender: Gender): BMRParameters {
+        console.log(`MFSJ`);
         switch (gender) {
             case Gender.Male: {
                 return {
@@ -47,6 +50,7 @@ export class MifflinStJeorParameters {
                     WeightMultiplier: 10.0,
                     HeightMultiplier: 6.25,
                     AgeMultiplier: 5.0,
+                    LeanBodyMassMultiplier: 0,
                 };
             }
             // Female
@@ -56,9 +60,16 @@ export class MifflinStJeorParameters {
                     WeightMultiplier: 10.0,
                     HeightMultiplier: 6.25,
                     AgeMultiplier: 5.0,
+                    LeanBodyMassMultiplier: 0,
                 };
             }
         }
+    }
+}
+
+export class KatchMccardleParameters {
+    public static get(_gender: Gender): BMRParameters {
+        return { WeightMultiplier: 0, HeightMultiplier: 0, AgeMultiplier: 0, LeanBodyMassMultiplier: 21.6, Constant: 370 };
     }
 }
 
@@ -70,13 +81,20 @@ export class BasalMetabolicRate {
         return !(value === 0 || isNaN(value));
     };
 
-    public static Calculate(bodyWeightKg: number, heightCm: number, ageYrs: number, parameters: BMRParameters): number | undefined {
+    public static Calculate(
+        bodyWeightKg: number,
+        heightCm: number,
+        ageYrs: number,
+        bodyFatPct: number,
+        parameters: BMRParameters
+    ): number | undefined {
         if (this.isIndividualInputValid(bodyWeightKg) && this.isIndividualInputValid(heightCm) && this.isIndividualInputValid(ageYrs)) {
             return (
                 parameters.Constant +
                 parameters.WeightMultiplier * bodyWeightKg +
                 parameters.HeightMultiplier * heightCm -
-                parameters.AgeMultiplier * ageYrs
+                parameters.AgeMultiplier * ageYrs +
+                parameters.LeanBodyMassMultiplier * ((100.0 - bodyFatPct) / 100.0) * bodyWeightKg
             );
         } else {
             return undefined;

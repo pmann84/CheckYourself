@@ -28,9 +28,9 @@ export interface IInputParams {
 
 export const DefaultInputParams: IInputParams = {
     gender: Gender.Male,
-    weight: 97,
-    height: 185,
-    age: 39,
+    weight: 70,
+    height: 175,
+    age: 25,
     activity: ActivityFactor.Sedentary,
 };
 

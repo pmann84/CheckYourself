@@ -102,11 +102,16 @@ export const TDEEInput = ({ initialInput, onChange }: ITDEEInputProps) => {
                 )}
                 {isSmallScreen && (
                     <OrderedTypography sx={{ paddingRight: "4px", paddingLeft: "4px" }} order={{ xs: 9 }}>
-                        with a
+                        with
                     </OrderedTypography>
                 )}
                 {isSmallScreen && (
                     <OrderedTypography sx={{ paddingRight: "4px", paddingLeft: "4px" }} order={{ xs: 11 }}>
+                        body fat leading a
+                    </OrderedTypography>
+                )}
+                {isSmallScreen && (
+                    <OrderedTypography sx={{ paddingRight: "4px", paddingLeft: "4px" }} order={{ xs: 13 }}>
                         lifestyle.
                     </OrderedTypography>
                 )}
@@ -175,7 +180,7 @@ export const TDEEInput = ({ initialInput, onChange }: ITDEEInputProps) => {
                         // sx={{ marginBottom: `${bottomMargin}px` }}
                     />
                 </Box>
-                <Box order={{ xs: 10, sm: 5 }}>
+                <Box order={{ xs: 12, sm: 5 }}>
                     <ResponsiveEnumSelect
                         enumVariable={ActivityFactor}
                         label="Acivity Level"
@@ -184,7 +189,7 @@ export const TDEEInput = ({ initialInput, onChange }: ITDEEInputProps) => {
                         // mapper={ActivityFactorShortName}
                     />
                 </Box>
-                <Box order={{ xs: 12, sm: 6 }}>
+                <Box order={{ xs: 10, sm: 6 }}>
                     <ResponsiveTextField
                         label="Body Fat %"
                         smallScreenSuffix="%"

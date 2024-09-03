@@ -42,7 +42,6 @@ export class HarrisBenedictParameters {
 
 export class MifflinStJeorParameters {
     public static get(gender: Gender): BMRParameters {
-        console.log(`MFSJ`);
         switch (gender) {
             case Gender.Male: {
                 return {

@@ -13,6 +13,18 @@ const AppBaseTheme = createTheme({
             '"Noto Color Emoji"',
         ].join(","),
     },
+    components: {
+        MuiToolbar: {
+            styleOverrides: {
+                root: {
+                    paddingRight: 0,
+                    "@media (min-width: 600px)": {
+                        paddingRight: 0,
+                    },
+                },
+            },
+        },
+    },
 });
 
 export const AppDarkTheme = createTheme(AppBaseTheme, {

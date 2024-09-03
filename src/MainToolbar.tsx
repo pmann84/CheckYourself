@@ -38,7 +38,7 @@ export interface IMainToolbarProps {
 }
 export const MainToolbar = ({ onThemeModeChange, initialThemeMode }: IMainToolbarProps) => {
     return (
-        <AppBar position="static" color="transparent">
+        <AppBar position="static" color="transparent" sx={{ paddingRight: "0" }}>
             <Toolbar>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     Check Yourself

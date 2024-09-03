@@ -1,6 +1,5 @@
 import { Theme } from "@emotion/react";
 import {
-    Box,
     Card,
     CardContent,
     CardHeader,
@@ -12,7 +11,6 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Typography,
     useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -46,19 +44,6 @@ export const IdealWeightDisplay = ({ heightInCm, gender, sx, weightInKg }: IIdea
         <Card sx={{ borderRadius: 2, ...sx }}>
             <CardHeader title="Ideal Weight" sx={{ paddingBottom: "5px" }} />
             <CardContent sx={{ paddingTop: "0px" }}>
-                <Box sx={{ padding: "10px" }}>
-                    <Typography
-                        sx={{
-                            fontSize: 30,
-                            paddingRight: "3px",
-                            lineHeight: 1,
-                        }}
-                    >
-                        {idealWeightRange.range[0] !== undefined && idealWeightRange.range[1] !== undefined
-                            ? `${idealWeightRange.range[0].toFixed(1)} - ${idealWeightRange.range[1].toFixed(1)}kg`
-                            : "-"}
-                    </Typography>
-                </Box>
                 <RangeChart
                     categories={[
                         toRange(idealWeightRange.range[0]! - 0.9 * rangeLength(toRange(...idealWeightRange.range)), idealWeightRange.range[0]),

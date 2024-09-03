@@ -1,5 +1,4 @@
 import {
-    Box,
     Card,
     CardContent,
     CardHeader,
@@ -12,7 +11,6 @@ import {
     TableHead,
     TableRow,
     Theme,
-    Typography,
     useTheme,
 } from "@mui/material";
 import { BMIClassification, BMIClassificationName, BMIRange, BMIWeightRange, BodyMassIndex } from "./CalorieUtils";
@@ -32,18 +30,7 @@ export const BMIDisplay = ({ weightKg, heightCm, sx }: IBMIDisplayProps) => {
     return (
         <Card sx={{ borderRadius: 2, ...sx }}>
             <CardHeader title="Body Mass Index (BMI)" sx={{ paddingBottom: "5px" }} />
-            <CardContent sx={{ paddingTop: "0px" }}>
-                <Box sx={{ padding: "10px" }}>
-                    <Typography
-                        sx={{
-                            fontSize: 30,
-                            paddingRight: "3px",
-                            lineHeight: 1,
-                        }}
-                    >
-                        {bmi.toFixed(1)}
-                    </Typography>
-                </Box>
+            <CardContent sx={{ paddingTop: "0px", paddingBottom: "5px" }}>
                 <RangeChart
                     categories={Object.values(BMIClassification)
                         .filter((fm) => {
@@ -56,6 +43,9 @@ export const BMIDisplay = ({ weightKg, heightCm, sx }: IBMIDisplayProps) => {
                     value={bmi}
                     valueSelectorColour={theme.palette.primary.main}
                 />
+            </CardContent>
+            <CardHeader title="Weight (kg)" sx={{ paddingTop: "5px", paddingBottom: "5px" }} />
+            <CardContent sx={{ paddingTop: "0px" }}>
                 <RangeChart
                     categories={Object.values(BMIClassification)
                         .filter((fm) => {

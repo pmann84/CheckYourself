@@ -4,6 +4,7 @@ import { CalorieDisplayCard } from "./CalorieDisplayCard";
 import { IdealWeightDisplay } from "./IdealWeightDisplay";
 import { TDEEResults } from "./TDEECalculator";
 import { TDEEResultsTable } from "./TDEEResultsTable";
+import { useSmallScreenMediaQuery } from "./useSmallScreenMediaQuery";
 
 const DisplayBox = styled(Box)(`
     display: flex;
@@ -18,9 +19,10 @@ export interface IResultsDisplayProps {
 }
 
 export const ResultsDisplay = ({ result }: IResultsDisplayProps) => {
+    const isSmallScreen = useSmallScreenMediaQuery();
     const bottomMargin = 10;
     return (
-        <DisplayBox>
+        <DisplayBox sx={{ paddingTop: `${isSmallScreen ? 0 : 10}px` }}>
             {/* <Box sx={{ display: "flex", justifyContent: "center", margin: `${bottomMargin}px` }}>
                 <Typography variant="h6">Results</Typography>
             </Box> */}

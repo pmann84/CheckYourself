@@ -15,7 +15,7 @@ import {
     Typography,
     useTheme,
 } from "@mui/material";
-import { BMIClassification, BMIClassificationName, BMIRange, BodyMassIndex } from "./CalorieUtils";
+import { BMIClassification, BMIClassificationName, BMIRange, BMIWeightRange, BodyMassIndex } from "./CalorieUtils";
 import { rangeToString } from "./Range";
 import { RangeChart } from "./RangeChart";
 
@@ -56,11 +56,25 @@ export const BMIDisplay = ({ weightKg, heightCm, sx }: IBMIDisplayProps) => {
                     value={bmi}
                     valueSelectorColour={theme.palette.primary.main}
                 />
+                <RangeChart
+                    categories={Object.values(BMIClassification)
+                        .filter((fm) => {
+                            return typeof fm !== "string";
+                        })
+                        .map((bmiEntry: string | BMIClassification) => {
+                            return BMIWeightRange(bmiEntry as BMIClassification, heightCm, 0.25);
+                        })}
+                    colours={["#bef7be", "#73f073", "#ff7373", "#ff2e2e"]}
+                    value={weightKg}
+                    valueSelectorColour={theme.palette.primary.main}
+                    units="kg"
+                />
                 <TableContainer component={Paper}>
                     <Table aria-label="bmi table" size="small">
                         <TableHead>
                             <TableRow>
                                 <TableCell>BMI Range</TableCell>
+                                <TableCell>Weight Range</TableCell>
                                 <TableCell align="right">Classification</TableCell>
                             </TableRow>
                         </TableHead>
@@ -78,6 +92,7 @@ export const BMIDisplay = ({ weightKg, heightCm, sx }: IBMIDisplayProps) => {
                                         <TableCell component="th" scope="row">
                                             {rangeToString(BMIRange(bmiEntry as BMIClassification))}
                                         </TableCell>
+                                        <TableCell>{rangeToString(BMIWeightRange(bmiEntry as BMIClassification, heightCm))}</TableCell>
                                         <TableCell align="right">{BMIClassificationName(bmiEntry as BMIClassification)}</TableCell>
                                     </TableRow>
                                 ))}

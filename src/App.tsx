@@ -23,8 +23,6 @@ export interface IResultsDisplayProps {
     result: TDEEResults;
 }
 
-// TODO: Ideal weight graphs
-// TODO: BMI graphs
 export const ResultsDisplay = ({ result }: IResultsDisplayProps) => {
     const bottomMargin = 10;
     return (
@@ -62,15 +60,15 @@ export const ResultsDisplay = ({ result }: IResultsDisplayProps) => {
                     <TDEEResultsTable sx={{ margin: `${bottomMargin}px` }} tdeeMap={result.tdee} selectedActivityFactor={result.activity} />
                 </Box>
                 <Box>
+                    <BMIDisplay sx={{ margin: `${bottomMargin}px` }} heightCm={result.input.height} weightKg={result.input.weight} />
+                </Box>
+                <Box>
                     <IdealWeightDisplay
                         sx={{ margin: `${bottomMargin}px` }}
                         heightInCm={result.input.height}
                         gender={result.input.gender}
                         weightInKg={result.input.weight}
                     />
-                </Box>
-                <Box>
-                    <BMIDisplay sx={{ margin: `${bottomMargin}px` }} heightCm={result.input.height} weightKg={result.input.weight} />
                 </Box>
             </Box>
         </DisplayBox>

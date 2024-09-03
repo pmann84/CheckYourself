@@ -55,7 +55,7 @@ export const IdealWeightDisplay = ({ heightInCm, gender, sx, weightInKg }: IIdea
                         }}
                     >
                         {idealWeightRange.range[0] !== undefined && idealWeightRange.range[1] !== undefined
-                            ? `${idealWeightRange.range[0].toFixed(1)}-${idealWeightRange.range[1].toFixed(1)}kg`
+                            ? `${idealWeightRange.range[0].toFixed(1)} - ${idealWeightRange.range[1].toFixed(1)}kg`
                             : "-"}
                     </Typography>
                 </Box>
@@ -68,6 +68,7 @@ export const IdealWeightDisplay = ({ heightInCm, gender, sx, weightInKg }: IIdea
                     colours={["#bef7be", "#73f073", "#ff7373"]}
                     value={weightInKg}
                     valueSelectorColour={theme.palette.primary.main}
+                    units="kg"
                 />
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table" size="small">

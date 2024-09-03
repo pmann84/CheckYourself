@@ -5,6 +5,11 @@ export interface ICanvasProps {
     height?: string;
 }
 
+export const getCanvasSize = (context: CanvasRenderingContext2D): { width: number; height: number } => {
+    const { devicePixelRatio: ratio = 1 } = window;
+    return { width: context.canvas.width / ratio, height: context.canvas.height / ratio };
+};
+
 const resizeCanvas = (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
     const { width, height } = canvas.getBoundingClientRect();
 

@@ -372,21 +372,67 @@ export enum BMIClassification {
     Obese,
 }
 
-const UnderweightThresholdKg = 18.5;
-const NormalThresholdKg = 25.0;
-const OverweightThresholdKg = 30.0;
+const BMIUnderweightThreshold = 18.5;
+const BMINormalThreshold = 25.0;
+const BMIOverweightThreshold = 30.0;
+
+export class BodyMassIndex {
+    public static Calculate(weightKg: number, heightCm: number): number {
+        const heightM = Convert.CmToMetres(heightCm);
+        return weightKg / (heightM * heightM);
+    }
+
+    public static CalculateWeight(bmi: number, heightCm: number): number {
+        const heightM = Convert.CmToMetres(heightCm);
+        return bmi * (heightM * heightM);
+    }
+
+    public static CalculateClassification(weightKg: number, heightCm: number): BMIClassification {
+        const bmi = BodyMassIndex.Calculate(weightKg, heightCm);
+        if (bmi < BMIUnderweightThreshold) return BMIClassification.Underweight;
+        if (bmi < BMINormalThreshold) return BMIClassification.Normal;
+        if (bmi < BMIOverweightThreshold) return BMIClassification.Overweight;
+        return BMIClassification.Obese;
+    }
+}
 
 export const BMIRange = (bmi: BMIClassification, extremaPercentage?: number): Range<number> => {
-    const range = OverweightThresholdKg - UnderweightThresholdKg;
+    const range = BMIOverweightThreshold - BMIUnderweightThreshold;
     switch (bmi) {
         case BMIClassification.Underweight:
-            return { min: extremaPercentage ? UnderweightThresholdKg - range * extremaPercentage : NaN, max: UnderweightThresholdKg };
+            return { min: extremaPercentage ? BMIUnderweightThreshold - range * extremaPercentage : NaN, max: BMIUnderweightThreshold };
         case BMIClassification.Normal:
-            return { min: UnderweightThresholdKg, max: NormalThresholdKg };
+            return { min: BMIUnderweightThreshold, max: BMINormalThreshold };
         case BMIClassification.Overweight:
-            return { min: NormalThresholdKg, max: OverweightThresholdKg };
+            return { min: BMINormalThreshold, max: BMIOverweightThreshold };
         case BMIClassification.Obese:
-            return { min: OverweightThresholdKg, max: extremaPercentage ? OverweightThresholdKg + range * extremaPercentage : NaN };
+            return { min: BMIOverweightThreshold, max: extremaPercentage ? BMIOverweightThreshold + range * extremaPercentage : NaN };
+    }
+};
+
+export const BMIWeightRange = (bmi: BMIClassification, heightCm: number, extremaPercentage?: number): Range<number> => {
+    const range = BMIOverweightThreshold - BMIUnderweightThreshold;
+    switch (bmi) {
+        case BMIClassification.Underweight:
+            return {
+                min: extremaPercentage ? BodyMassIndex.CalculateWeight(BMIUnderweightThreshold - range * extremaPercentage, heightCm) : NaN,
+                max: BodyMassIndex.CalculateWeight(BMIUnderweightThreshold, heightCm),
+            };
+        case BMIClassification.Normal:
+            return {
+                min: BodyMassIndex.CalculateWeight(BMIUnderweightThreshold, heightCm),
+                max: BodyMassIndex.CalculateWeight(BMINormalThreshold, heightCm),
+            };
+        case BMIClassification.Overweight:
+            return {
+                min: BodyMassIndex.CalculateWeight(BMINormalThreshold, heightCm),
+                max: BodyMassIndex.CalculateWeight(BMIOverweightThreshold, heightCm),
+            };
+        case BMIClassification.Obese:
+            return {
+                min: BodyMassIndex.CalculateWeight(BMIOverweightThreshold, heightCm),
+                max: extremaPercentage ? BodyMassIndex.CalculateWeight(BMIOverweightThreshold + range * extremaPercentage, heightCm) : NaN,
+            };
     }
 };
 
@@ -402,18 +448,3 @@ export const BMIClassificationName = (bmi: BMIClassification): string => {
             return "Obese";
     }
 };
-
-export class BodyMassIndex {
-    public static Calculate(weightKg: number, heightCm: number): number {
-        const heightM = Convert.CmToMetres(heightCm);
-        return weightKg / (heightM * heightM);
-    }
-
-    public static CalculateClassification(weightKg: number, heightCm: number): BMIClassification {
-        const bmi = BodyMassIndex.Calculate(weightKg, heightCm);
-        if (bmi < UnderweightThresholdKg) return BMIClassification.Underweight;
-        if (bmi < NormalThresholdKg) return BMIClassification.Normal;
-        if (bmi < OverweightThresholdKg) return BMIClassification.Overweight;
-        return BMIClassification.Obese;
-    }
-}

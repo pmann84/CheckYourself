@@ -7,10 +7,10 @@ export const rangeLength = (range: Range<number>): number => {
     return range.max - range.min;
 };
 
-export const rangeToString = (range: Range<number>): string => {
-    if (isNaN(range.max)) return `${range.min}+`;
-    if (isNaN(range.min)) return `${range.max} or less`;
-    return `${range.min}-${range.max}`;
+export const rangeToString = (range: Range<number>, dp = 1): string => {
+    if (isNaN(range.max)) return `${range.min.toFixed(dp)}+`;
+    if (isNaN(range.min)) return `< ${range.max.toFixed(dp)}`;
+    return `${range.min.toFixed(dp)}-${range.max.toFixed(dp)}`;
 };
 
 export const toRange = (min: number | undefined, max: number | undefined) => {

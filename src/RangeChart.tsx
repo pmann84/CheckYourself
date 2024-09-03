@@ -1,4 +1,4 @@
-import { Canvas } from "./Canvas";
+import { Canvas, getCanvasSize } from "./Canvas";
 import { Range, rangeLength } from "./Range";
 
 export interface IRangeChartProps {
@@ -6,6 +6,7 @@ export interface IRangeChartProps {
     colours: string[];
     value?: number;
     valueSelectorColour?: string;
+    units?: string;
 }
 
 const drawTriangle = (
@@ -14,30 +15,34 @@ const drawTriangle = (
     y: number,
     baseWidth: number,
     height: number,
-    direction: "up" | "down",
+    direction: "up" | "down" | "left" | "right",
     colour: string
 ) => {
     ctx.fillStyle = colour;
-    const multiplier = direction === "up" ? 1 : -1;
     ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x + baseWidth * 0.5, y + multiplier * height);
-    ctx.lineTo(x - baseWidth * 0.5, y + multiplier * height);
+    if (direction === "up" || direction === "down") {
+        const multiplier = direction === "up" ? 1 : -1;
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + baseWidth * 0.5, y + multiplier * height);
+        ctx.lineTo(x - baseWidth * 0.5, y + multiplier * height);
+    } else {
+        const multiplier = direction === "left" ? 1 : -1;
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + multiplier * height, y + baseWidth * 0.5);
+        ctx.lineTo(x + multiplier * height, y - baseWidth * 0.5);
+    }
     ctx.fill();
 };
 
-export const RangeChart = ({ categories, value, colours, valueSelectorColour }: IRangeChartProps) => {
+export const RangeChart = ({ categories, value, colours, valueSelectorColour, units }: IRangeChartProps) => {
     const chartHeight = 35;
     const draw = (ctx: CanvasRenderingContext2D, _frameCount: number) => {
         if (categories.length === 0) return;
 
-        if (value && value > categories[categories.length - 1].max) categories[categories.length - 1].max = value * (1.0 + 0.25);
-        if (value && value < categories[0].min) categories[0].min = value * (1.0 - 0.25);
         const x = 0;
         const barHeight = 10;
         const y = (chartHeight - barHeight) / 2;
-        const { devicePixelRatio: ratio = 1 } = window;
-        const width = ctx.canvas.width / ratio;
+        const width = getCanvasSize(ctx).width;
         // Draw the outline
         // ctx.strokeStyle = "#000000";
         // ctx.beginPath();
@@ -63,13 +68,23 @@ export const RangeChart = ({ categories, value, colours, valueSelectorColour }: 
                 ctx.fillStyle = valueSelectorColour ?? "#000000";
                 const text = category.min.toFixed(1);
                 const textWidth = ctx.measureText(text).width;
-                ctx.fillText(category.min.toFixed(1), cX - textWidth * 0.5, y + barHeight * 2);
+                ctx.fillText(`${category.min.toFixed(1)}${units ?? ""}`, cX - textWidth * 0.5, y + barHeight * 2);
             }
             cX += cWidth;
         });
 
-        if (value) {
-            const arrowHeight = 7;
+        const arrowHeight = 7;
+        if (value && value > categories[categories.length - 1].max) {
+            // Draw a triangle indicating that the value is off the side
+            const aX = (categories[categories.length - 1].max - categories[0].min) * widthPerValue;
+            const aY = y - 0.5 * arrowHeight;
+            drawTriangle(ctx, aX, aY, arrowHeight, arrowHeight, "right", valueSelectorColour ?? "#000000");
+        } else if (value && value < categories[0].min) {
+            // Draw a triangle indicating that the value is off the side
+            const aX = 0;
+            const aY = y - 0.5 * arrowHeight;
+            drawTriangle(ctx, aX, aY, arrowHeight, arrowHeight, "left", valueSelectorColour ?? "#000000");
+        } else if (value) {
             const aX = (value - categories[0].min) * widthPerValue;
             const aY = y;
             drawTriangle(ctx, aX, aY, arrowHeight, arrowHeight, "down", valueSelectorColour ?? "#000000");

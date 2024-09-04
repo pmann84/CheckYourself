@@ -18,8 +18,12 @@ const AppBaseTheme = createTheme({
             styleOverrides: {
                 root: {
                     paddingRight: 0,
+                    minHeight: 32,
+                    paddingBottom: 5,
+                    paddingTop: 5,
                     "@media (min-width: 600px)": {
                         paddingRight: 0,
+                        minHeight: 32,
                     },
                 },
             },
@@ -72,6 +76,38 @@ export const AppDarkTheme = createTheme(AppBaseTheme, {
             },
         },
         MuiTable: {
+            styleOverrides: {
+                root: {
+                    color: "rgb(251, 255, 255)",
+                    backgroundColor: "rgb(15, 23, 42)",
+                },
+            },
+        },
+        MuiDialogContent: {
+            styleOverrides: {
+                root: {
+                    color: "rgb(251, 255, 255)",
+                    backgroundColor: "rgb(15, 23, 42)",
+                },
+            },
+        },
+        MuiDialogTitle: {
+            styleOverrides: {
+                root: {
+                    color: "rgb(251, 255, 255)",
+                    backgroundColor: "rgb(15, 23, 42)",
+                },
+            },
+        },
+        MuiAppBar: {
+            styleOverrides: {
+                root: {
+                    color: "rgb(251, 255, 255)",
+                    backgroundColor: "rgb(15, 23, 42)",
+                },
+            },
+        },
+        MuiButton: {
             styleOverrides: {
                 root: {
                     color: "rgb(251, 255, 255)",

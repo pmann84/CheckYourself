@@ -1,10 +1,5 @@
 import { useCanvas } from "./useCanvas";
 
-export interface ICanvasProps {
-    draw: (ctx: CanvasRenderingContext2D, frameCount: number) => void;
-    height?: string;
-}
-
 export const getCanvasSize = (context: CanvasRenderingContext2D): { width: number; height: number } => {
     const { devicePixelRatio: ratio = 1 } = window;
     return { width: context.canvas.width / ratio, height: context.canvas.height / ratio };
@@ -34,8 +29,14 @@ const postDraw = (context: CanvasRenderingContext2D, _canvas: HTMLCanvasElement)
     context.restore();
 };
 
-export const Canvas = ({ draw, height }: ICanvasProps) => {
+export interface ICanvasProps {
+    draw: (ctx: CanvasRenderingContext2D, frameCount: number) => void;
+    height?: string;
+    onMouseMove?: React.MouseEventHandler<HTMLCanvasElement>;
+}
+
+export const Canvas = ({ draw, height, onMouseMove }: ICanvasProps) => {
     const canvasRef = useCanvas(draw, predraw, postDraw);
 
-    return <canvas ref={canvasRef} style={{ width: "100%", height: height ?? "100%" }} />;
+    return <canvas ref={canvasRef} style={{ width: "100%", height: height ?? "100%" }} onMouseMove={onMouseMove} />;
 };

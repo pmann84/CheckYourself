@@ -44,7 +44,7 @@ export const BMIDisplay = ({ weightKg, heightCm, sx }: IBMIDisplayProps) => {
                     valueSelectorColour={theme.palette.primary.main}
                 />
             </CardContent>
-            <CardHeader title="Weight (kg)" sx={{ paddingTop: "5px", paddingBottom: "5px" }} />
+            <CardHeader title="Weight" sx={{ paddingTop: "5px", paddingBottom: "5px" }} />
             <CardContent sx={{ paddingTop: "0px" }}>
                 <RangeChart
                     categories={Object.values(BMIClassification)

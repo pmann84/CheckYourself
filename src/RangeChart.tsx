@@ -34,8 +34,18 @@ const drawTriangle = (
     ctx.fill();
 };
 
-const drawText = (ctx: CanvasRenderingContext2D, text: string, x: number, y: number, color: string, alignment: "left" | "center" | "right") => {
+const drawText = (
+    ctx: CanvasRenderingContext2D,
+    text: string,
+    x: number,
+    y: number,
+    color: string,
+    alignment: "left" | "center" | "right",
+    fontSize = 10,
+    fontFamily = "Arial"
+) => {
     ctx.fillStyle = color;
+    ctx.font = `${fontSize}px ${fontFamily}`;
     const textWidth = ctx.measureText(text).width;
     let cX = x;
     if (alignment === "center") {
@@ -47,13 +57,14 @@ const drawText = (ctx: CanvasRenderingContext2D, text: string, x: number, y: num
 };
 
 export const RangeChart = ({ categories, value, colours, valueSelectorColour, units }: IRangeChartProps) => {
-    const chartHeight = 50;
+    const chartHeight = 65;
+    const fontFamily = "Inter";
     const draw = (ctx: CanvasRenderingContext2D, _frameCount: number) => {
         if (categories.length === 0) return;
 
         const x = 0;
         const barHeight = 10;
-        const y = (chartHeight - barHeight) / 2;
+        const y = (chartHeight - barHeight) / 1.5;
         const width = getCanvasSize(ctx).width;
         const range = categories[categories.length - 1].max - categories[0].min;
         const widthPerValue = width / range;
@@ -71,33 +82,46 @@ export const RangeChart = ({ categories, value, colours, valueSelectorColour, un
             }
             ctx.fill();
             if (index !== 0) {
-                drawText(ctx, `${category.min.toFixed(1)}${units ?? ""}`, cX, y + barHeight * 2, valueSelectorColour ?? "#000000", "center");
+                drawText(
+                    ctx,
+                    `${category.min.toFixed(1)}${units ?? ""}`,
+                    cX,
+                    y + barHeight * 2,
+                    valueSelectorColour ?? "#000000",
+                    "center",
+                    undefined,
+                    fontFamily
+                );
             }
             cX += cWidth;
         });
 
         // Markers
         const arrowHeight = 7;
+        const valueFontSize = 17;
+        const textOffset = 2;
         const valueText = `${value?.toFixed(1)}${units ?? ""}`;
         if (value && value > categories[categories.length - 1].max) {
             // Draw a triangle indicating that the value is off the side
             const aX = (categories[categories.length - 1].max - categories[0].min) * widthPerValue;
             const aY = y - 0.5 * arrowHeight;
             drawTriangle(ctx, aX, aY, arrowHeight, arrowHeight, "right", valueSelectorColour ?? "#000000");
-            drawText(ctx, valueText, aX, aY - arrowHeight, valueSelectorColour ?? "#000000", "right");
+            drawText(ctx, valueText, aX, aY - arrowHeight - textOffset, valueSelectorColour ?? "#000000", "right", valueFontSize, fontFamily);
         } else if (value && value < categories[0].min) {
             // Draw a triangle indicating that the value is off the side
             const aX = 0;
             const aY = y - 0.5 * arrowHeight;
             drawTriangle(ctx, aX, aY, arrowHeight, arrowHeight, "left", valueSelectorColour ?? "#000000");
-            drawText(ctx, valueText, aX, aY - arrowHeight, valueSelectorColour ?? "#000000", "left");
+            drawText(ctx, valueText, aX, aY - arrowHeight - textOffset, valueSelectorColour ?? "#000000", "left", valueFontSize, fontFamily);
         } else if (value) {
             const aX = (value - categories[0].min) * widthPerValue;
             const aY = y;
             drawTriangle(ctx, aX, aY, arrowHeight, arrowHeight, "down", valueSelectorColour ?? "#000000");
-            drawText(ctx, valueText, aX, aY - arrowHeight * 1.5, valueSelectorColour ?? "#000000", "center");
+            drawText(ctx, valueText, aX, aY - arrowHeight * 1.5 - textOffset, valueSelectorColour ?? "#000000", "center", valueFontSize, fontFamily);
         }
     };
 
-    return <Canvas draw={draw} height={`${chartHeight}px`} />;
+    const onMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {};
+
+    return <Canvas draw={draw} height={`${chartHeight}px`} onMouseMove={onMouseMove} />;
 };

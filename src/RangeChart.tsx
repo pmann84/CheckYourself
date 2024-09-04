@@ -121,7 +121,7 @@ export const RangeChart = ({ categories, value, colours, valueSelectorColour, un
         }
     };
 
-    const onMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {};
+    const onMouseMove = (_event: React.MouseEvent<HTMLCanvasElement>) => {};
 
     return <Canvas draw={draw} height={`${chartHeight}px`} onMouseMove={onMouseMove} />;
 };

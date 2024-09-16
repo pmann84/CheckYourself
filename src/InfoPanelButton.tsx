@@ -57,7 +57,7 @@ export const InfoPanelButton = ({}: IInfoPanelButtonProps) => {
                         <Typography variant="h6">Basal Metabolic Rate (BMR)</Typography>
                         <Paragraph>
                             BMR is the rate of energy expenditure per unit time by endothermic animals at rest. There are several formulas that can be
-                            used, this page uses Mifflin St Jeor (if not using body fat %) and Katch Mccardle (if using body fat %). These are as
+                            used, this page uses Mifflin St Jeor (if not using body fat %) and Katch McCardle (if using body fat %). These are as
                             follows:
                         </Paragraph>
                         <Paragraph>
@@ -70,11 +70,18 @@ export const InfoPanelButton = ({}: IInfoPanelButtonProps) => {
                             is a constant value.
                         </Paragraph>
                         <Paragraph>
-                            These take the following values
-                            <BlockMath>C_w = 10.0 \\ C_h = 6.25 \\ C_a = 5.0 \\ C = 5.0 (Male), -161.0 (Female) </BlockMath>
+                            For Mifflin St Jeor these parameters take the following values
+                            <BlockMath>
+                                {"C_w = 10.0 \\ C_h = 6.25 \\ C_a = 5.0 \\ C = 5.0 \\space(\\text{Male}), -161.0 \\space(\\text{Female})"}
+                            </BlockMath>
                         </Paragraph>
-                        {/* <Typography variant="h6">Total Daily Enery Expenditure (TDEE)</Typography>
-                        <Paragraph>Calculating TDEE first requires us to calculate the , </Paragraph> */}
+                        <Paragraph>
+                            For Katch-McCardle the formula for calulating BMR is
+                            <BlockMath>{"P = C + C_{lbm} * l"}</BlockMath>
+                            where <InlineMath>l</InlineMath> is your lean body mass which can be calculated using
+                            <BlockMath>{"l = w * \\frac{(100 - b)}{100}"}</BlockMath>
+                            where <InlineMath>b</InlineMath> is your percentage body fat and <InlineMath>w</InlineMath> is your weight in kg.
+                        </Paragraph>
                     </DialogContent>
                     {isSmallScreen && (
                         <Button sx={{ borderRadius: 0 }} variant="contained" disableElevation onClick={handleClose} aria-label="close">
